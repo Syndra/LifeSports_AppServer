@@ -45,7 +45,6 @@ exports.test2 = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    console.log('Json : ', JSON.parse(JSON.stringify(data)).team_ID)
     var connection = mysqlLoader.mysql_load();
     connection.query('SELECT * FROM team where team_ID < ?',
     [data.team_ID],
