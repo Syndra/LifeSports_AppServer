@@ -7,14 +7,14 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
-require("./test.js")
+var test = require("./test.js")
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'html')));
 
 app.get('/all', (req, res) => {
-  test1(req, res);
+  test.test1(req, res);
 });
 
 app.post('/searchlogs', (req, res) => {
