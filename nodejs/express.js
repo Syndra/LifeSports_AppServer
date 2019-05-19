@@ -7,12 +7,13 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
+includeJs("test.js")
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'html')));
 
 app.get('/all', (req, res) => {
-  //default_op_logs(req, res);
   test1(req, res);
 });
 
@@ -28,33 +29,33 @@ app.post('/searchavg', (req, res) => {
   search_op_avg(req, res);
 });
 
-app.listen(3000, () => {
-  console.log('Express App on port 3000!');
-});
+// app.listen(3000, () => {
+//   console.log('Express App on port 3000!');
+// });
 
-function test1(request, response)
-{
-  var body = '';
-  const chunks = [];
-  var _data;
-  request.on('data', chunk => chunks.push(chunk));
-  request.on('end', () =>
-  {
-    data = qs.parse(Buffer.concat(chunks).toString());
-    console.log('Data : ', data);
-    var connection = mysql_load();
-    connection.query('SELECT * FROM team',
-    '',
-    function(err, results){
-      if(err)
-        console.log(err);
-      else{
-        response.send(results);
-      }
-    });
-  });
+// function test1(request, response)
+// {
+//   var body = '';
+//   const chunks = [];
+//   var _data;
+//   request.on('data', chunk => chunks.push(chunk));
+//   request.on('end', () =>
+//   {
+//     data = qs.parse(Buffer.concat(chunks).toString());
+//     console.log('Data : ', data);
+//     var connection = mysql_load();
+//     connection.query('SELECT * FROM team',
+//     '',
+//     function(err, results){
+//       if(err)
+//         console.log(err);
+//       else{
+//         response.send(results);
+//       }
+//     });
+//   });
 
-}
+// }
 
 function mysql_load()
 {
