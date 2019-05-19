@@ -43,7 +43,7 @@ exports.test2 = function (request, response)
   request.on('data', chunk => chunks.push(chunk));
   request.on('end', () =>
   {
-    data = qs.parse(Buffer.concat(chunks).toString());
+    data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     console.log('Json : ', JSON.parse(JSON.stringify(data)).team_ID)
     var connection = mysqlLoader.mysql_load();
