@@ -7,14 +7,14 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
-var test = require("./test.js")
+require("./test.js")
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'html')));
 
 app.get('/all', (req, res) => {
-  test.test1(req, res);
+  test1(req, res);
 });
 
 app.post('/searchlogs', (req, res) => {
@@ -29,9 +29,9 @@ app.post('/searchavg', (req, res) => {
   search_op_avg(req, res);
 });
 
-// app.listen(3000, () => {
-//   console.log('Express App on port 3000!');
-// });
+app.listen(3000, () => {
+  console.log('Express App on port 3000!');
+});
 
 // function test1(request, response)
 // {
