@@ -12,7 +12,8 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'html')));
 
 app.get('/all', (req, res) => {
-  default_op_logs(req, res);
+  //default_op_logs(req, res);
+  test1(req, res);
 });
 
 app.post('/searchlogs', (req, res) => {
@@ -31,15 +32,38 @@ app.listen(3000, () => {
   console.log('Express App on port 3000!');
 });
 
+function test1(request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = qs.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysql_load();
+    connection.query('SELECT * FROM TEAM',
+    '',
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
 
 function mysql_load()
 {
   var connection = mysql.createConnection({
-    host    :'localhost',
+    host    :'3.16.229.70',
     port : 3306,
-    user : 'mysql',
+    user : 'root',
     password : '1111',
-    database:'4linux',
+    database:'lifesports',
     insecureAuth : true
   });
   connection.connect(function(err)
