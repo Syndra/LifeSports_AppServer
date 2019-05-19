@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
-var mysqlLoader = require('./database/mysqlLoader.js')
+var mysqlLoader = require("../database/mysqlLoader.js")
 
 //Get Test
 exports.test1 = function (request, response)
