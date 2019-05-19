@@ -1,3 +1,12 @@
+const express = require('express');
+const path = require('path');
+var http = require('http');
+var fs = require('fs');
+var url = require('url');
+var mysql = require('mysql');
+var qs = require('querystring');
+var ejs = require('ejs');
+
 exports.test1 = function (request, response)
 {
   var body = '';
