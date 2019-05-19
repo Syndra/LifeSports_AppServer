@@ -1,4 +1,4 @@
-function test1(request, response)
+exports.test1 = function (request, response)
 {
   var body = '';
   const chunks = [];
