@@ -43,7 +43,7 @@ function test1(request, response)
     data = qs.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysql_load();
-    connection.query('SELECT * FROM TEAM',
+    connection.query('SELECT * FROM team',
     '',
     function(err, results){
       if(err)
