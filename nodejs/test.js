@@ -7,6 +7,8 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
+var mysqlLoader = require('./mysqlLoader.js')
+
 exports.test1 = function (request, response)
 {
   var body = '';
@@ -17,7 +19,7 @@ exports.test1 = function (request, response)
   {
     data = qs.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    var connection = mysql_load();
+    var connection = mysqlLoader.mysql_load();
     connection.query('SELECT * FROM team',
     '',
     function(err, results){
