@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var qs = require('querystring');
 var ejs = require('ejs');
 
-includeJs("test.js")
+require("./test.js")
 
 const app = express();
 
