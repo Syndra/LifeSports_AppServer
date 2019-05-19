@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Log Monitoring</title>
+    <script type="text/javascript" src="javascript/post.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/template.css" />
+</head>
+<body>
+    <div>
+      <h1>All Log</h1>
+    </div>
+    <td>Search Interval</td>
+    <td><input type="text" id="starttime" placeholder="1900-00-00 HH:MM:SS"></td>
+    <td>~</td>
+    <td><input type="text" id="endtime" placeholder="1900-00-00 HH:MM:SS"></td>
+    <input type="button" value="LOGS" id="submit" onClick="goPost('searchlogs')">
+    <input type="button" value="WAKEUPLOG" id="submit" onClick="goPost('searchwakeuplog')">
+    <table>
+      <tr>
+        <th>IDX</th>
+        <th>DATETIME</th>
+        <th>TEMPRATURE</th>
+        <th>LIGHT</th>
+        <th>PRESS</th>
+        <th>ALTITUDE</th>
+      </tr>
+      <tr>
+      </tr>
+    <% logList.forEach(function(item, index){%>
+      <tr>
+        <td><%=index+1%></td>
+        <td><input type="text" value="<%=item.Date%>"></td>
+        <td><input type="text" value="<%=item.Temp%>"></td>
+        <td><input type="text" value="<%=item.Light%>"></td>
+        <td><input type="text" value="<%=item.Press%>"></td>
+        <td><input type="text" value="<%=item.Alti%>"></td>
+      </tr>
+    <% }); %>
+    </table>
+</body>
+</html>
