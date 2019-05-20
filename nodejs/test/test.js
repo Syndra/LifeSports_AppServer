@@ -21,7 +21,7 @@ exports.test1 = function (request, response)
     data = qs.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    connection.query('SELECT * FROM team',
+    connection.query('SELECT * FROM fac_info',
     '',
     function(err, results){
       if(err)
