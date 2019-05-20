@@ -43,7 +43,7 @@ exports.getGymInfo = function (request, response)
   request.on('data', chunk => chunks.push(chunk));
   request.on('end', () =>
   {
-    data = qs.parse(Buffer.concat(chunks).toString());
+    data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query('SELECT gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime FROM gym WHERE gym_ID = ?',
