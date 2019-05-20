@@ -26,6 +26,10 @@ app.get('/gym', (req, res) => {
   gym.getAllGym(req, res);
 });
 
+app.post('/gym/gyminfo', (req, res) => {
+  gym.getGymInfo(req, res);
+});
+
 app.post('/searchlogs', (req, res) => {
   search_op_logs(req, res);
 });

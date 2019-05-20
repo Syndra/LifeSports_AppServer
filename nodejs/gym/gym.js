@@ -33,3 +33,28 @@ exports.getAllGym = function (request, response)
   });
 
 }
+
+//Get Test
+exports.getGymInfo = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = qs.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query('SELECT gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime FROM gym WHERE gym_ID = ?',
+    [data.gym_ID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
