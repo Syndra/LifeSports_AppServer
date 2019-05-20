@@ -8,6 +8,7 @@ var qs = require('querystring');
 var ejs = require('ejs');
 
 var test = require("./test/test.js")
+var gym = require("./gym/gym.js")
 
 const app = express();
 
@@ -19,6 +20,10 @@ app.get('/all', (req, res) => {
 
 app.post('/testPost', (req, res) => {
   test.test2(req, res);
+});
+
+app.get('/gym', (req, res) => {
+  gym.getAllGym(req, res);
 });
 
 app.post('/searchlogs', (req, res) => {
