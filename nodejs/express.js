@@ -10,6 +10,7 @@ var ejs = require('ejs');
 var test = require("./test/test.js")
 var gym = require("./gym/gym.js")
 var schedule = require("./schedule/schedule.js")
+var user = require("./user/user.js")
 
 const app = express();
 
@@ -38,18 +39,24 @@ app.post('/schedule/schedulebyfac', (req, res) => {
   schedule.getScheduleByFac(req, res);
 });
 
-app.post('/searchlogs', (req, res) => {
-  search_op_logs(req, res);
+//USER
+app.post('/user/regiuser', (req, res) => {
+  user.regiUser(req, res);
 });
 
-app.post('/searchwakeuplog', (req, res) => {
-  search_op_wakeuplog(req, res);
+app.post('/user/login', (req, res) => {
+  user.loginTry(req, res);
 });
 
-app.post('/searchavg', (req, res) => {
-  search_op_avg(req, res);
+app.post('/user/userinfo', (req, res) => {
+  user.getUserInfo(req, res);
 });
 
+app.post('/user/checkdup', (req, res) => {
+  user.checkIdDup(req, res);
+});
+
+//OTHER
 app.listen(3000, () => {
   console.log('Express App on port 3000!');
 });
