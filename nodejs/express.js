@@ -80,11 +80,11 @@ app.post('/schedule/reservationstatus', (req, res) => {
 });
 
 app.post('/schedule/matchingstatus', (req, res) => {
-  schedule.reservationDetail(req, res);
+  schedule.matchingStatus(req, res);
 });
 
 app.post('/schedule/detail', (req, res) => {
-  schedule.matchingStatus(req, res);
+  schedule.reservationDetail(req, res);
 });
 
 //USER
