@@ -9,8 +9,8 @@ var ejs = require('ejs');
 
 var mysqlLoader = require("../database/mysqlLoader.js")
 
-//Register New User
-exports.regiUser = function (request, response)
+//팀 정보 조회
+exports.teamInfo = function (request, response)
 {
   var body = '';
   const chunks = [];
@@ -22,34 +22,8 @@ exports.regiUser = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'INSERT INTO `user` (ID, PWD, name, gender, birth) VALUES (?, ?, ?, ?, ?)',
-    [data.ID, data.PWD, data.name, data.gender, data.birth],
-    function(err, results){
-      if(err)
-        console.log(err);
-      else{
-        response.send("Success");
-      }
-    });
-  });
-
-}
-
-//Try to login
-exports.loginTry = function (request, response)
-{
-  var body = '';
-  const chunks = [];
-  var _data;
-  request.on('data', chunk => chunks.push(chunk));
-  request.on('end', () =>
-  {
-    data = JSON.parse(Buffer.concat(chunks).toString());
-    console.log('Data : ', data);
-    var connection = mysqlLoader.mysql_load();
-    connection.query(
-      'SELECT UDID, ID, name, gender, birth FROM `user` WHERE ID=? AND PWD=?',
-    [data.ID, data.PWD],
+      "SELECT UDID, ID, name, team_ID, team_name, team_main_subj, team_MMR, winning_rate from `user` as a join (SELECT team_ID, team_name, team_leader_UDID, team_main_subj, team_MMR, winning_rate from team where team_ID = ?) as b on (a.UDID = b.team_leader_UDID)",
+    [data.team_ID],
     function(err, results){
       if(err)
         console.log(err);
@@ -61,8 +35,8 @@ exports.loginTry = function (request, response)
 
 }
 
-//get User Information
-exports.getUserInfo = function (request, response)
+//팀 경기 결과 조회
+exports.teamResultSearch = function (request, response)
 {
   var body = '';
   const chunks = [];
@@ -74,8 +48,8 @@ exports.getUserInfo = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT ID, name, gender, birth FROM `user` WHERE UDID = ?',
-    [data.UDID],
+      "SELECT match_ID, win_team_ID, win_team_name, win_team_MMR, win_winning_rate, lose_team_ID, lose_team_name, lose_team_MMR, lose_winning_rate, temp.gym_ID, gym_name, gym_location, mvp_UDID, mvp_ID, mvp_name from (SELECT match_ID, win_team_ID, lose_team_ID, a.gym_ID, a.fac_ID, score, mvp_UDID, starttime, endtime from match_result as a join fac_schedule as b on (match_ID = b.schedule_ID)) as temp join (select team_ID, team_name as win_team_name, team_MMR as win_team_MMR, winning_rate as win_winning_rate from team) as c on (temp.win_team_ID = c.team_ID) join (select team_ID, team_name as lose_team_name, team_MMR as lose_team_MMR, winning_rate as lose_winning_rate from team) as d on (temp.lose_team_ID = d.team_ID) join (select gym_ID, gym_name, gym_location from gym) as e on (temp.gym_ID = e.gym_ID) join (select UDID, ID as mvp_ID, name as mvp_name from `user`) as f on (temp.mvp_UDID = f.UDID) WHERE win_team_ID = ? OR lose_team_ID = ?",
+    [data.team_ID],
     function(err, results){
       if(err)
         console.log(err);
@@ -87,8 +61,8 @@ exports.getUserInfo = function (request, response)
 
 }
 
-//중복검사
-exports.checkIdDup = function (request, response)
+//팀 멤버 목록 조회
+exports.teamMemberSearch = function (request, response)
 {
   var body = '';
   const chunks = [];
@@ -100,8 +74,8 @@ exports.checkIdDup = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT COUNT(*) as isduplicated FROM `user` WHERE ID = ?',
-    [data.ID],
+      "SELECT UDID, ID, name from `user` where UDID in (SELECT UDID from team natural join team_user_list where team_ID = ?)",
+    [data.team_ID],
     function(err, results){
       if(err)
         console.log(err);
@@ -113,9 +87,8 @@ exports.checkIdDup = function (request, response)
 
 }
 
-
-//유저가 가입한 팀 목록 조회
-exports.searchUserTeam = function (request, response)
+//팀 검색
+exports.searchTeam = function (request, response)
 {
   var body = '';
   const chunks = [];
@@ -127,8 +100,8 @@ exports.searchUserTeam = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT team_name, team_leader_UDID, team_MMR, team_main_subj, winning_rate, if(team_leader_UDID = ?, '1', '0') as isleader from team natural join team_user_list where UDID = ?",
-    [data.UDID, data.UDID],
+      "SELECT team_ID, team_name, team_leader_UDID, team_main_subj, winning_rate from team where team_name like '%?%'",
+    [data.searchword],
     function(err, results){
       if(err)
         console.log(err);

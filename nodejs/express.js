@@ -11,6 +11,7 @@ var test = require("./test/test.js")
 var gym = require("./gym/gym.js")
 var schedule = require("./schedule/schedule.js")
 var user = require("./user/user.js")
+var team = require("./team/team.js")
 
 const app = express();
 
@@ -102,6 +103,27 @@ app.post('/user/userinfo', (req, res) => {
 
 app.post('/user/checkdup', (req, res) => {
   user.checkIdDup(req, res);
+});
+
+app.post('/user/hasteam', (req, res) => {
+  user.searchUserTeam(req, res);
+});
+
+//TEAM
+app.post('/team/teaminfo', (req, res) => {
+  team.teamInfo(req, res);
+});
+
+app.post('/team/teamresult', (req, res) => {
+  team.teamResultSearch(req, res);
+});
+
+app.post('/team/teammember', (req, res) => {
+  team.teamMemberSearch(req, res);
+});
+
+app.post('/team/teamsearch', (req, res) => {
+  team.searchTeam(req, res);
 });
 
 //OTHER
