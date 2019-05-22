@@ -34,9 +34,57 @@ app.post('/gym/gyminfo', (req, res) => {
   gym.getGymInfo(req, res);
 });
 
+app.post('/gym/gyminfobysports', (req, res) => {
+  gym.getGymInfoBySports(req, res);
+});
+
+app.post('/gym/favorite', (req, res) => {
+  gym.searchPrefGym(req, res);
+});
+
+app.post('/gym/favoriteins', (req, res) => {
+  gym.insertPrefGym(req, res);
+});
+
+app.post('/gym/favoritedel', (req, res) => {
+  gym.deletePrefGym(req, res);
+});
+
 //SCHEDULE
 app.post('/schedule/schedulebyfac', (req, res) => {
   schedule.getScheduleByFac(req, res);
+});
+
+app.post('/schedule/scheduletypereserv', (req, res) => {
+  schedule.reservationTypeSearch(req, res);
+});
+
+app.post('/schedule/scheduletypematch', (req, res) => {
+  schedule.matchingTypeSearch(req, res);
+});
+
+app.post('/schedule/schedulereservypdate', (req, res) => {
+  schedule.insertReservation(req, res);
+});
+
+app.post('/schedule/schedulematchupdate', (req, res) => {
+  schedule.joinMatching(req, res);
+});
+
+app.post('/schedule/joinmember', (req, res) => {
+  schedule.matchingUserList(req, res);
+});
+
+app.post('/schedule/reservationstatus', (req, res) => {
+  schedule.reservationStatus(req, res);
+});
+
+app.post('/schedule/matchingstatus', (req, res) => {
+  schedule.reservationDetail(req, res);
+});
+
+app.post('/schedule/detail', (req, res) => {
+  schedule.matchingStatus(req, res);
 });
 
 //USER

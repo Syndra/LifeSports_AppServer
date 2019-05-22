@@ -100,7 +100,7 @@ exports.checkIdDup = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT COUNT(*) FROM `user` WHERE ID = ?',
+      'SELECT COUNT(*) as isduplicated FROM `user` WHERE ID = ?',
     [data.ID],
     function(err, results){
       if(err)
