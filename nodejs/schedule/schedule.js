@@ -230,7 +230,7 @@ exports.matchingUserList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT ID, name, from `user` where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
+      "SELECT ID, name from `user` where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
     [data.schedule_ID],
     function(err, results){
       if(err)
