@@ -35,7 +35,7 @@ app.post('/gym/gyminfo', (req, res) => {
   gym.getGymInfo(req, res);
 });
 
-app.post('/gym/gyminfobysports', (req, res) => {
+app.post('/gym/gymbysports', (req, res) => {
   gym.getGymInfoBySports(req, res);
 });
 
