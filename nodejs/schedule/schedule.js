@@ -48,7 +48,7 @@ exports.reservationStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(starttime)-TO_DAYS(sysdate()) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?))',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?))',
     [data.UDID],
     function(err, results){
       if(err)
@@ -74,7 +74,7 @@ exports.reservationStatusTEST = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(starttime)-TO_DAYS(sysdate()) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) LIMIT 2',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) LIMIT 2',
     [data.UDID],
     function(err, results){
       if(err)
@@ -100,7 +100,7 @@ exports.matchingStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant, TO_DAYS(starttime)-TO_DAYS(sysdate()) as dday from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?)',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?)',
     [data.UDID],
     function(err, results){
       if(err)
