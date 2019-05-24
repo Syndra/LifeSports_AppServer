@@ -47,7 +47,7 @@ exports.getGymInfo = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query('SELECT gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime FROM gym WHERE gym_ID = ?',
-    [data.gym_ID],
+    [data.UDID, data.gym_ID],
     function(err, results){
       if(err)
         console.log(err);
@@ -82,7 +82,7 @@ exports.getGymInfoBySports = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query('SELECT distinct gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime, gym_latitude, gym_longitude from gym natural join fac_info where subj_ID = ?',
-    [data.gym_ID, data.subj_ID],
+    [data.subj_ID],
     function(err, results){
       if(err)
         console.log(err);
