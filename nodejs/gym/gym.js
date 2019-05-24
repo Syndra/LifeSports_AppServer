@@ -106,8 +106,8 @@ exports.searchPrefGym = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    connection.query('SELECT gym_ID, gym_name, gym_location from pref_gym_per_user natural join gym WHERE UDID = ?',
-    [data.UDID],
+    connection.query('SELECT gym_ID, gym_name, gym_location from pref_gym_per_user natural join gym WHERE UDID = ? AND subj_ID = ?',
+    [data.UDID, data.subj_ID],
     function(err, results){
       if(err)
         console.log(err);
