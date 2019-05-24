@@ -137,7 +137,7 @@ exports.insertPrefGym = function (request, response)
       if(err)
         console.log(err);
       else{
-        response.send(results);
+        response.send("success");
       }
     });
   });
@@ -162,7 +162,7 @@ exports.deletePrefGym = function (request, response)
       if(err)
         console.log(err);
       else{
-        response.send(results);
+        response.send("success");
       }
     });
   });
