@@ -126,7 +126,7 @@ exports.reservationTypeSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT schedule_ID, schedule_name, gym_ID, reserv_ID, starttime, endtime, if (isnull(reserv_ID), '0', '1') as cur_status, schedule_type from fac_schedule as a  left join (select reserv_ID, reserv_team_ID from reserv_matches) as b on (a.schedule_ID = b.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '1' OR schedule_type = '3' OR schedule_type = '4') AND subj_ID = ?",
+      "SELECT schedule_ID, schedule_name, gym_ID, reserv_ID, starttime, endtime, if (isnull(reserv_ID), '0', '1') as cur_status, schedule_type from fac_schedule as a  left join (select reserv_ID, reserv_team_ID from reserv_matches) as b on (a.schedule_ID = b.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '1' OR schedule_type = '3') AND subj_ID = ?",
     [data.gym_ID, data.subj_ID],
     function(err, results){
       if(err)
@@ -155,7 +155,7 @@ exports.matchingTypeSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT schedule_ID, schedule_name, gym_ID, starttime, endtime, schedule_type, cur_participant, max_participant, min_participant from fac_schedule as a left join (select reserv_ID, UDID from open_matches) as b on (a.schedule_ID = b.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '2' OR schedule_type = '3' OR schedule_type = '4') AND subj_ID = ? GROUP by schedule_ID",
+      "SELECT schedule_ID, schedule_name, gym_ID, starttime, endtime, schedule_type, cur_participant, max_participant, min_participant from fac_schedule as a left join (select reserv_ID, UDID from open_matches) as b on (a.schedule_ID = b.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '2' OR schedule_type = '3') AND subj_ID = ? GROUP by schedule_ID",
     [data.gym_ID, data.subj_ID],
     function(err, results){
       if(err)
