@@ -132,6 +132,9 @@ exports.reservationTypeSearch = function (request, response)
       if(err)
         console.log(err);
       else{
+        for(var i = 0; i < results.length; i++){
+          console.log(results[i]);
+        }
         response.send(results);
       }
     });
