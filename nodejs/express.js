@@ -64,7 +64,7 @@ app.post('/schedule/scheduletypematch', (req, res) => {
   schedule.matchingTypeSearch(req, res);
 });
 
-app.post('/schedule/schedulereservypdate', (req, res) => {
+app.post('/schedule/schedulereservupdate', (req, res) => {
   schedule.insertReservation(req, res);
 });
 
