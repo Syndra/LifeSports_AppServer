@@ -48,7 +48,7 @@ exports.reservationStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) order by starttime desc limit 3',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) order by starttime desc',
     [data.UDID],
     function(err, results){
       if(err)
@@ -100,7 +100,7 @@ exports.matchingStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?) order by starttime desc limit 3',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?) order by starttime desc',
     [data.UDID],
     function(err, results){
       if(err)
@@ -126,7 +126,7 @@ exports.reservationDetail = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, min_participant, max_participant, cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info from fac_schedule natural join gym NATURAL join fac_info where schedule_ID = ?',
+      'SELECT gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, min_participant, max_participant, cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info, subj_ID from fac_schedule natural join gym NATURAL join fac_info where schedule_ID = ?',
     [data.schedule_ID],
     function(err, results){
       if(err)
