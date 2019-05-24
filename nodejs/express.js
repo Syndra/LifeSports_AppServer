@@ -80,6 +80,11 @@ app.post('/schedule/reservationstatus', (req, res) => {
   schedule.reservationStatus(req, res);
 });
 
+//TEST
+app.post('/schedule/reservationstatustest', (req, res) => {
+  schedule.reservationStatusTEST(req, res);
+});
+
 app.post('/schedule/matchingstatus', (req, res) => {
   schedule.matchingStatus(req, res);
 });

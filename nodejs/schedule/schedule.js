@@ -61,6 +61,32 @@ exports.reservationStatus = function (request, response)
 
 }
 
+//예약 현황 조회 TEST
+exports.reservationStatusTEST = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) LIMIT 2',
+    [data.UDID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
+
 //매칭 현황 조회
 exports.matchingStatus = function (request, response)
 {
