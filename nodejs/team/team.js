@@ -100,7 +100,7 @@ exports.searchTeam = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT team_ID, team_name, team_leader_UDID, team_main_subj, winning_rate from team where team_name like '%?%'",
+      "SELECT team_ID, team_name, team_leader_UDID, team_main_subj, winning_rate from team where team_name like '%?%' limit 5",
     [data.searchword],
     function(err, results){
       if(err)
