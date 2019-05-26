@@ -74,7 +74,7 @@ exports.teamMemberSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, name from `user` where UDID in (SELECT UDID from team natural join team_user_list where team_ID = ?)",
+      "SELECT UDID, ID, MMR, name from `user` natural join soccer_record where UDID in (SELECT UDID from team natural join team_user_list where team_ID = ?)",
     [data.team_ID],
     function(err, results){
       if(err)
