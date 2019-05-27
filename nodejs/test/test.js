@@ -9,7 +9,7 @@ var ejs = require('ejs');
 
 var mysqlLoader = require("../database/mysqlLoader_TEST.js")
 
-//Get Test
+//Query 1
 exports.test1 = function (request, response)
 {
   var body = '';
@@ -18,11 +18,11 @@ exports.test1 = function (request, response)
   request.on('data', chunk => chunks.push(chunk));
   request.on('end', () =>
   {
-    data = qs.parse(Buffer.concat(chunks).toString());
+    data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    var connection = mysqlLoader.mysql_load();
-    connection.query('SELECT * FROM fac_info',
-    '',
+    var connection = mysqlLoader_TEST.mysql_load();
+    connection.query("SELECT date_format(NOW(), '%Y') - date_format(birthDate, '%Y') + 1 AS age FROM member WHERE memberID = ?",
+    [data.ID],
     function(err, results){
       if(err)
         console.log(err);
@@ -34,7 +34,7 @@ exports.test1 = function (request, response)
 
 }
 
-//Post Test
+//Query2
 exports.test2 = function (request, response)
 {
   var body = '';
@@ -45,9 +45,9 @@ exports.test2 = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    var connection = mysqlLoader.mysql_load();
-    connection.query('SELECT * FROM team where team_ID < ?',
-    [data.team_ID],
+    var connection = mysqlLoader_TEST.mysql_load();
+    connection.query("INSERT INTO enterLog VALUES(sysdate(), ?, ?, NOW(), NULL)",
+    [data.member_ID, data.store_ID],
     function(err, results){
       if(err)
         console.log(err);

@@ -14,11 +14,11 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'html')));
 
 //TEST
-app.get('/all', (req, res) => {
+app.post('/ageCheck', (req, res) => {
   test.test1(req, res);
 });
 
-app.post('/testPost', (req, res) => {
+app.post('/enterLog', (req, res) => {
   test.test2(req, res);
 });
 
