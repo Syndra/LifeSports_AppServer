@@ -23,6 +23,6 @@ app.post('/testPost', (req, res) => {
 });
 
 //OTHER
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log('Express App on port 3000!');
 });
