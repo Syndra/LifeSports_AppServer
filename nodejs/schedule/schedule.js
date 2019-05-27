@@ -48,7 +48,33 @@ exports.reservationStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?))',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) order by starttime desc',
+    [data.UDID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
+
+//예약 현황 조회 TEST
+exports.reservationStatusTEST = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) LIMIT 2',
     [data.UDID],
     function(err, results){
       if(err)
@@ -74,7 +100,7 @@ exports.matchingStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?)',
+      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, max_participant, min_participant, cur_participant, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule NATURAL join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID as schedule_ID from open_matches where UDID = ?) order by starttime desc',
     [data.UDID],
     function(err, results){
       if(err)
@@ -100,7 +126,7 @@ exports.reservationDetail = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, min_participant, max_participant, cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info from fac_schedule natural join gym NATURAL join fac_info where schedule_ID = ?',
+      'SELECT gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, min_participant, max_participant, cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info, subj_ID from fac_schedule natural join gym NATURAL join fac_info where schedule_ID = ?',
     [data.schedule_ID],
     function(err, results){
       if(err)
@@ -126,7 +152,7 @@ exports.reservationTypeSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT schedule_ID, schedule_name, gym_ID, reserv_ID, starttime, endtime, if (isnull(reserv_ID), '0', '1') as cur_status, schedule_type from fac_schedule as a  left join (select reserv_ID, reserv_team_ID from reserv_matches) as b on (a.schedule_ID = b.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '1' OR schedule_type = '3') AND subj_ID = ?",
+      "SELECT schedule_ID, schedule_name, gym_ID, reserv_ID, starttime, endtime, if (isnull(reserv_ID), '0', '1') as cur_status, schedule_type, reserv_team_ID, reserv_team_name, opponent_team_ID, opponent_team_name, is_solo from fac_schedule b left join reserv_matches_team a on (b.schedule_ID = a.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '1' OR schedule_type = '3') AND b.subj_ID = ?",
     [data.gym_ID, data.subj_ID],
     function(err, results){
       if(err)
@@ -233,7 +259,7 @@ exports.matchingUserList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT ID, name from `user` where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
+      "SELECT UDID, ID, name, MMR from `user` natural join soccer_record where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
     [data.schedule_ID],
     function(err, results){
       if(err)

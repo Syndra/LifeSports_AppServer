@@ -46,7 +46,7 @@ exports.getGymInfo = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    connection.query('SELECT gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime, isfavorite FROM gym natural join (SELECT ? as gym_ID, count(*) as isfavorite from pref_gym_per_user where gym_ID = ? and UDID = ?) as temp  WHERE gym_ID = ?',
+    connection.query('SELECT gym_ID, gym_name, gym_info, gym_location, avail_starttime, avail_endtime, gym_longitude, gym_latitude, isfavorite FROM gym natural join (SELECT ? as gym_ID, count(*) as isfavorite from pref_gym_per_user where gym_ID = ? and UDID = ?) as temp  WHERE gym_ID = ?',
     [data.gym_ID, data.gym_ID, data.UDID, data.gym_ID],
     function(err, results){
       if(err)

@@ -127,7 +127,7 @@ exports.searchUserTeam = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT team_name, team_leader_UDID, team_MMR, team_main_subj, winning_rate, if(team_leader_UDID = ?, '1', '0') as isleader from team natural join team_user_list where UDID = ?",
+      "SELECT team_ID, team_name, team_leader_UDID, team_MMR, team_main_subj, winning_rate, if(team_leader_UDID = ?, '1', '0') as isleader from team natural join team_user_list where UDID = ?",
     [data.UDID, data.UDID],
     function(err, results){
       if(err)
