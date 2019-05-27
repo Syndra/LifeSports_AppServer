@@ -131,6 +131,11 @@ app.post('/team/teamsearch', (req, res) => {
   team.searchTeam(req, res);
 });
 
+app.post('/team/checkdup', (req, res) => {
+  team.checkIdDup(req, res);
+});
+
+
 //OTHER
 app.listen(3000, () => {
   console.log('Express App on port 3000!');

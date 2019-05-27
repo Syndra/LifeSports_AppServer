@@ -112,3 +112,29 @@ exports.searchTeam = function (request, response)
   });
 
 }
+
+//팀 검색
+exports.checkIdDup = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      "SELECT COUNT(*) as isduplicated FROM team WHERE team_name = ?",
+    [data.team_ID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
