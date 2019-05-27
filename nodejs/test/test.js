@@ -46,7 +46,7 @@ exports.test2 = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    connection.query("INSERT INTO enterLog VALUES(sysdate(), ?, ?, NOW(), NULL)",
+    connection.query("INSERT INTO enterlog VALUES(sysdate(), ?, ?, NOW(), NULL)",
     [data.member_ID, data.store_ID],
     function(err, results){
       if(err)
