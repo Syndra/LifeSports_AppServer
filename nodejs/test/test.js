@@ -20,7 +20,7 @@ exports.test1 = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    var connection = mysqlLoader_TEST.mysql_load();
+    var connection = mysqlLoader.mysql_load();
     connection.query("SELECT date_format(NOW(), '%Y') - date_format(birthDate, '%Y') + 1 AS age FROM member WHERE memberID = ?",
     [data.ID],
     function(err, results){
@@ -45,7 +45,7 @@ exports.test2 = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
-    var connection = mysqlLoader_TEST.mysql_load();
+    var connection = mysqlLoader.mysql_load();
     connection.query("INSERT INTO enterLog VALUES(sysdate(), ?, ?, NOW(), NULL)",
     [data.member_ID, data.store_ID],
     function(err, results){
