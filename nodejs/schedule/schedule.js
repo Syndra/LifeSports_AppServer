@@ -164,7 +164,7 @@ exports.reservationTypeSearch = function (request, response)
         "NULL as opponent_winning_rate, "+
         "NULL as is_solo "+
         "from fac_schedule where (schedule_type = '1' or schedule_type = '3') and schedule_ID not in (select reserv_ID from reserv_matches) "+
-        "and gym_ID = ? and subj_ID = ? "+
+        "and gym_ID = ? and subj_ID = ? and starttime >= sysdate()"+
         ") "+
         "union "+
         "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
@@ -179,7 +179,8 @@ exports.reservationTypeSearch = function (request, response)
         "opponent_winning_rate,"+
         "is_solo "+
         "from reserv_matches_team c join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
-        "and gym_ID = ? and d.subj_ID = ?)",
+        "and gym_ID = ? and d.subj_ID = ? and starttime >= sysdate() "+
+        ")",
     [data.gym_ID, data.subj_ID, data.gym_ID, data.subj_ID],
     function(err, results){
       if(err)
