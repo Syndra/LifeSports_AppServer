@@ -152,8 +152,35 @@ exports.reservationTypeSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT schedule_ID, schedule_name, gym_ID, reserv_ID, starttime, endtime, if (isnull(reserv_ID), '0', '1') as cur_status, schedule_type, reserv_team_ID, reserv_team_name, opponent_team_ID, opponent_team_name, is_solo from fac_schedule b left join reserv_matches_team a on (b.schedule_ID = a.reserv_ID) WHERE gym_ID = ? AND (schedule_type = '1' OR schedule_type = '3') AND b.subj_ID = ?",
-    [data.gym_ID, data.subj_ID],
+      "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
+       "'0' as cur_status, "+
+        "NULL as reserv_team_ID,"+ 
+        "NULL as reserv_team_name, "+
+        "NULL as reserv_team_MMR, "+
+        "NULL as reserv_winning_rate, "+
+        "NULL as opponent_team_ID, "+
+        "NULL as opponent_team_name, "+
+        "NULL as opponent_team_MMR, "+
+        "NULL as opponent_winning_rate, "+
+        "NULL as is_solo "+
+        "from fac_schedule where (schedule_type = '1' or schedule_type = '3') and schedule_ID not in (select reserv_ID from reserv_matches) "+
+        "and gym_ID = ? and subj_ID = ? "+
+        ") "+
+        "union "+
+        "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
+        "'1' as cur_status, "+
+        "reserv_team_ID, "+
+        "reserv_team_name, "+
+        "reserv_team_MMR, "+
+        "reserv_winning_rate, "+
+        "opponent_team_ID, "+
+        "opponent_team_name, "+
+        "opponent_team_MMR, "+
+        "opponent_winning_rate,"+
+        "is_solo "+
+        "from reserv_matches_team c join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
+        "and gym_ID = ? and subj_ID = ?)",
+    [data.gym_ID, data.subj_ID, data.gym_ID, data.subj_ID],
     function(err, results){
       if(err)
         console.log(err);
