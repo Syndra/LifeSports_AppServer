@@ -48,8 +48,8 @@ exports.reservationStatus = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday from fac_schedule natural join gym NATURAL join fac_info where schedule_ID in (SELECT reserv_ID from reserv_matches WHERE reserv_team_ID = ( SELECT team_ID from team_user_list where UDID = ?)) order by starttime desc',
-    [data.UDID],
+      "select gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday  from schedule_detail where schedule_ID in (select reserv_ID from reserv_matches_team where reserv_team_ID in (select team_ID from team_user_list where UDID = ?) or opponent_team_ID in (select team_ID from team_user_list where UDID = ?)) order by starttime decs limit 5",
+    [data.UDID, data.UDID],
     function(err, results){
       if(err)
         console.log(err);
