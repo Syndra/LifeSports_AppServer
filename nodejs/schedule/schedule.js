@@ -187,9 +187,6 @@ exports.reservationTypeSearch = function (request, response)
       if(err)
         console.log(err);
       else{
-        for(var i = 0; i < results.length; i++){
-          console.log(results[i]);
-        }
         response.send(results);
       }
     });
@@ -218,7 +215,7 @@ exports.matchingTypeSearch = function (request, response)
       "WHERE gym_ID = ? "+
       "AND (schedule_type = '2' OR schedule_type = '3') "+
       "AND subj_ID = ? GROUP by schedule_ID "+
-      "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')"
+      "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')",
     [data.gym_ID, data.subj_ID, data.startdate, data.enddate],
     function(err, results){
       if(err)
