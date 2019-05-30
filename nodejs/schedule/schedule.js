@@ -179,7 +179,7 @@ exports.reservationTypeSearch = function (request, response)
         "opponent_winning_rate,"+
         "is_solo "+
         "from reserv_matches_team c join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
-        "and gym_ID = ? and d.subj_ID = ?",
+        "and gym_ID = ? and d.subj_ID = ?"+
         "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')"+
         ")",
     [data.gym_ID, data.subj_ID, data.startdate, data.enddate, data.gym_ID, data.subj_ID, data.startdate, data.enddate],
