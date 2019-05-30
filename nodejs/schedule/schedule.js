@@ -150,11 +150,6 @@ exports.reservationTypeSearch = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     var connection = mysqlLoader.mysql_load();
-    _searchDate = Date.parse(data.starttime);
-    var _endDate = new Date();
-    _endDate.setDate(_searchDate + 7)
-    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
-    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay();
     connection.query(
       "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
        "'0' as cur_status, "+
@@ -187,7 +182,7 @@ exports.reservationTypeSearch = function (request, response)
         "and gym_ID = ? and d.subj_ID = ?",
         "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')"+
         ")",
-    [data.gym_ID, data.subj_ID, searchDate, endDate, data.gym_ID, data.subj_ID, searchDate, endDate],
+    [data.gym_ID, data.subj_ID, data.startdate, data.enddate, data.gym_ID, data.subj_ID, data.startdate, data.enddate],
     function(err, results){
       if(err)
         console.log(err);
@@ -214,11 +209,6 @@ exports.matchingTypeSearch = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    _searchDate = data.starttime;
-    var _endDate = new Date();
-    _endDate.setDate(_searchDate.getDate() + 7)
-    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
-    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay();
     connection.query(
       "SELECT schedule_ID, schedule_name, gym_ID, starttime, "+
       "endtime, schedule_type, cur_participant, max_participant, min_participant "+
@@ -229,7 +219,7 @@ exports.matchingTypeSearch = function (request, response)
       "AND (schedule_type = '2' OR schedule_type = '3') "+
       "AND subj_ID = ? GROUP by schedule_ID "+
       "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')"
-    [data.gym_ID, data.subj_ID, searchDate, endDate],
+    [data.gym_ID, data.subj_ID, data.startdate, data.enddate],
     function(err, results){
       if(err)
         console.log(err);
