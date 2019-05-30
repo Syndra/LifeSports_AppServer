@@ -150,6 +150,7 @@ exports.reservationTypeSearch = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     var connection = mysqlLoader.mysql_load();
+    console.log(data)
     connection.query(
       "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
        "'0' as cur_status, "+
@@ -293,7 +294,10 @@ exports.matchingUserList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, name, MMR from `user` natural join soccer_record where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
+      "SELECT UDID, ID, name, MMR, gender "+
+      "from `user` "+
+      "natural join soccer_record "+
+      "where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
     [data.schedule_ID],
     function(err, results){
       if(err)

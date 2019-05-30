@@ -74,7 +74,7 @@ exports.teamMemberSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, MMR, name from `user` natural join soccer_record where UDID in (SELECT UDID from team natural join team_user_list where team_ID = ?)",
+      "SELECT UDID, ID, MMR, name, gender from `user` natural join soccer_record where UDID in (SELECT UDID from team natural join team_user_list where team_ID = ?)",
     [data.team_ID],
     function(err, results){
       if(err)
@@ -100,7 +100,7 @@ exports.searchTeam = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT team_ID, team_name, team_leader_UDID, team_main_subj, winning_rate from team where team_name like '%" + data.searchword + "%' limit 5",
+      "SELECT team_ID, team_name, team_leader_UDID, team_main_subj, winning_rate, team_MMR from team where team_name like '%" + data.searchword + "%' limit 5",
     [data.searchword],
     function(err, results){
       if(err)
