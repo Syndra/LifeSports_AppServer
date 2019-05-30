@@ -164,6 +164,9 @@ exports.createTeam = function (request, response)
     function(err, results){
       if(err)
         console.log(err);
+      else{
+        response.send(results);
+      }
     });
   });
 
