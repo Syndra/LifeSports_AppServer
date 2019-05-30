@@ -149,11 +149,10 @@ exports.reservationTypeSearch = function (request, response)
   request.on('end', () =>
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
-    console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    console.log(data.starttime);
-    _searchDate = new Date(data.starttime);
-    _endDate = new Date(data.starttime + 7);
+    _searchDate = data.starttime;
+    var _endDate = new Date();
+    _endDate.setDate(_searchDate.getDate() + 7)
     searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
     endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay();
     connection.query(
@@ -215,10 +214,11 @@ exports.matchingTypeSearch = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    _searchDate = new Date(data.starttime)
-    _endDate = new Date(data.starttime + 7)
-    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay()
-    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay()
+    _searchDate = data.starttime;
+    var _endDate = new Date();
+    _endDate.setDate(_searchDate.getDate() + 7)
+    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
+    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay();
     connection.query(
       "SELECT schedule_ID, schedule_name, gym_ID, starttime, "+
       "endtime, schedule_type, cur_participant, max_participant, min_participant "+
