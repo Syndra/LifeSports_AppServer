@@ -163,7 +163,7 @@ exports.reservationTypeSearch = function (request, response)
         "NULL as opponent_winning_rate, "+
         "NULL as is_solo "+
         "from fac_schedule where (schedule_type = '1' or schedule_type = '3') and schedule_ID not in (select reserv_ID from reserv_matches) "+
-        "and gym_ID = ? and subj_ID = ? ",
+        "and gym_ID = ? and subj_ID = ? "+
         "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d')"+
         ") "+
         "union "+
