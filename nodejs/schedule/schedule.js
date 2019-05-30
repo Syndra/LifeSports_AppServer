@@ -150,7 +150,7 @@ exports.reservationTypeSearch = function (request, response)
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     var connection = mysqlLoader.mysql_load();
-    _searchDate = data.starttime;
+    _searchDate = new Date(data.starttime);
     var _endDate = new Date();
     _endDate.setDate(_searchDate.getDate() + 7)
     searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
