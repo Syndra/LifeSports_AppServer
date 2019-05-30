@@ -151,6 +151,8 @@ exports.reservationTypeSearch = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     var connection = mysqlLoader.mysql_load();
     console.log(data)
+    data.gym_ID = data.gym_ID.toString()
+    data.subj_ID = data.subj_ID.toString()
     connection.query(
       "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
        "'0' as cur_status, "+
