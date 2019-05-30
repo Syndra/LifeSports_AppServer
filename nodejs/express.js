@@ -135,6 +135,10 @@ app.post('/team/checkdup', (req, res) => {
   team.checkIdDup(req, res);
 });
 
+app.post('/team/create', (req, res) => {
+  team.createTeam(req, res);
+});
+
 
 //OTHER
 app.listen(3000, () => {

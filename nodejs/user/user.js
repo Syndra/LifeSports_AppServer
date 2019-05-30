@@ -22,7 +22,7 @@ exports.regiUser = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'INSERT INTO `user` (ID, PWD, name, gender, birth) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO `user` (ID, PWD, name, gender, ) VALUES (?, ?, ?, ?, ?)',
     [data.ID, data.PWD, data.name, data.gender, data.birth],
     function(err, results){
       if(err)

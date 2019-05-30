@@ -138,3 +138,33 @@ exports.checkIdDup = function (request, response)
   });
 
 }
+
+//팀 생성
+exports.createTeam = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      "insert into team (team_name, team_leader_UDID, team_MMR, team_main_subj, winning_rate) values (?, ?, '2000', ?, '0')",
+    [data.team_name, data.UDID, data.subj_ID],
+    function(err, results){
+      if(err)
+        console.log(err);
+    });
+    connection.query(
+      "insert into team_user_list (team_ID, UDID) values((select max(team_ID) from team), ?)",
+    [data.UDID],
+    function(err, results){
+      if(err)
+        console.log(err);
+    });
+  });
+
+}
