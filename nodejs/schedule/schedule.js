@@ -151,10 +151,11 @@ exports.reservationTypeSearch = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    _searchDate = new Date(data.starttime)
-    _endDate = new Date(data.starttime + 7)
-    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay()
-    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay()
+    console.log(data.starttime);
+    _searchDate = new Date(data.starttime);
+    _endDate = new Date(data.starttime + 7);
+    searchDate = _searchDate.getFullYear() + '-' + _searchDate.getMonth() + '-' + _searchDate.getDay();
+    endDate = _endDate.getFullYear() + '-' + _endDate.getMonth() + '-' + _endDate.getDay();
     connection.query(
       "(select schedule_ID, gym_ID, schedule_name, starttime, endtime, schedule_type, "+
        "'0' as cur_status, "+
