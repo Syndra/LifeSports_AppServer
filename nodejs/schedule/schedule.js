@@ -217,8 +217,9 @@ exports.matchingTypeSearch = function (request, response)
       "on (a.schedule_ID = b.reserv_ID) "+
       "WHERE gym_ID = ? "+
       "AND (schedule_type = '2' OR schedule_type = '3') "+
+      "AND subj_ID = ? "+
       "and starttime >= STR_TO_DATE(?, '%Y-%m-%d') and starttime < STR_TO_DATE(?, '%Y-%m-%d') "+
-      "AND subj_ID = ? GROUP by schedule_ID ",
+      "GROUP by schedule_ID ",
     [data.gym_ID, data.subj_ID, data.startdate, data.enddate],
     function(err, results){
       if(err)
