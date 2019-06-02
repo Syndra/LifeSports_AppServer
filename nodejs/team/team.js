@@ -264,6 +264,14 @@ exports.teamResultSearch = function (request, response)
         for(var i = 0 ; i < results.length; i++){
           var score = results[i].score;
           var score_split = score.split(':');
+
+          if(results[i].win_team_ID == data.team_ID){
+            results[i].is_win = '1';
+          }
+          else{
+            results[i].is_win = '0';
+          }
+
           if(score_split[0] > score_split[1]){
             results[i].win_score = score_split[0];
             results[i].lose_score = score_split[1];
