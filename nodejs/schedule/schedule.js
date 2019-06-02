@@ -560,6 +560,13 @@ function suffle_team(result)
 
 function result_preprocess(data)
 {
+    if(data.reserv_team_ID == null){
+      data.reserv_team_ID = '-100';
+    }
+    if(data.opponent_team_ID == null){
+      data.opponent_team_ID = '-200';
+    }
+
     if(data.reserv_score > data.opponent_score){
       data.win_team_ID = data.reserv_team_ID;
       data.lose_team_ID = data.opponent_team_ID;
