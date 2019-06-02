@@ -280,8 +280,8 @@ exports.insertReservation = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "INSERT into reserv_matches (reserv_ID, subj_ID, reserv_team_ID, is_solo) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), (select team_ID from team where team_leader_UDID = ?), ?)",
-    [data.schedule_ID, data.schedule_ID, data.UDID, data.is_solo],
+      "INSERT into reserv_matches (reserv_ID, subj_ID, reserv_team_ID, is_solo) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), ?, ?)",
+    [data.schedule_ID, data.schedule_ID, data.team_ID, data.is_solo],
     function(err, results){
       if(err)
         console.log(err);
@@ -306,10 +306,9 @@ exports.joinReservation = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "UPDATE reserv_matches SET opponent_team_ID = "+
-      "(SELECT team_ID from team WHERE team_leader_UDID = ?) "+
+      "UPDATE reserv_matches SET opponent_team_ID = ? "+
       "WHERE reserv_ID = ?",
-    [data.UDID, data.schedule_ID],
+    [data.team_ID, data.schedule_ID],
     function(err, results){
       if(err)
         console.log(err);
