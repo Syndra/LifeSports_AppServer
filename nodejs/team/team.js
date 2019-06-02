@@ -170,7 +170,7 @@ exports.teamInfo = function (request, response)
                                                 try{
                                                   result[0].my_rank = results[0].my_rank;  
                                                 }
-                                                catch{
+                                                catch(e){
                                                   result[0].my_rank = null;
                                                 }
                                                 
