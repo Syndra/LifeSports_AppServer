@@ -469,10 +469,13 @@ exports.matchResult = function (request, response)
         if(err)
           console.log(err);
         else{
+          data.gym_ID = result[0].gym_ID;
+          data.fac_ID = result[0].fac_ID;
+          data.subj_ID = result[0].subj_ID;
           connection.query(
             "INSERT INTO match_result (match_ID, win_team_ID, lose_team_ID, gym_ID, fac_ID, subj_ID, score, mvp_UDID) "+
-            "",
-          [data.schedule_ID],
+            "(?, ?, ?, ?, ?, ?, ?, ?)",
+          [data.schedule_ID, data.win_team_ID, data.lose_team_ID, data.gym_ID, data.fac_ID, data.subj_ID, data.score, data.mvp_UDID],
           function(err, results){
             if(err)
               console.log(err);
@@ -484,6 +487,35 @@ exports.matchResult = function (request, response)
       }
     );
   });
+}
+
+//평가해야할 경기 목록 조회
+exports.toEvaluateList = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      "SELECT UDID, ID, name, MMR, gender, is_team_A "+
+      "from `user` "+
+      "natural join soccer_record "+
+      "natural join (SELECT UDID, is_team_A from open_match_participant where match_ID = ?) as b",
+    [data.schedule_ID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
 }
 
 function suffle_team(result)
@@ -510,10 +542,15 @@ function result_preprocess(data)
     if(data.reserv_score > data.opponent_score){
       data.win_team_ID = reserv_team_ID;
       data.lose_team_ID = opponent_team_ID;
+      var winS = reserv_score;
+      var loseS = opponent_score;
     }else{
       data.win_team_ID = opponent_team_ID;
       data.lose_team_ID = reserv_team_ID;
+      var winS = opponent_score;
+      var loseS = reserv_score;
     }
+    data.score = winS + ":" + loseS;
 
     return data;
 }

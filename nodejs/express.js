@@ -97,6 +97,14 @@ app.post('/schedule/detail', (req, res) => {
   schedule.reservationDetail(req, res);
 });
 
+app.post('/schedule/regimatchresult', (req, res) => {
+  schedule.matchResult(req, res);
+});
+
+app.post('/schedule/toevaluate', (req, res) => {
+  schedule.toEvaluateList(req, res);
+});
+
 //USER
 app.post('/user/regiuser', (req, res) => {
   user.regiUser(req, res);
