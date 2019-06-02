@@ -362,7 +362,7 @@ exports.joinMatching = function (request, response)
           else{
             suffle_team(results);
             console.log(results);
-            for(var i = 0; i < results.size(); i++){
+            for(var i = 0; i < results.length; i++){
               connection.query(
                 "UPDATE open_match_team SET is_team_A = "+
                 "?"+
@@ -412,8 +412,8 @@ exports.matchingUserList = function (request, response)
 
 function suffle_team(result)
 {
-  for(var i = 0; i < result.size() - 1; i++){
-      for(var j = 0; j < result.size() - 1; j++){
+  for(var i = 0; i < result.length - 1; i++){
+      for(var j = 0; j < result.length - 1; j++){
         if(result[j].MMR > result[j+1].MMR){
           temp = result[j];
           result[j] = result[j+1];
@@ -422,7 +422,7 @@ function suffle_team(result)
       }
   }
 
-  for(var i = 0 ; i < result.size(); i++){
+  for(var i = 0 ; i < result.length; i++){
     result[i].is_team_A = i%2;
   }
 
