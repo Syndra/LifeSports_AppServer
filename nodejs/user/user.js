@@ -252,5 +252,7 @@ function get_month_record(connection, data){
       }
     });
 
+    console.log(result);
+
     return result;
 }
