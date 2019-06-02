@@ -434,10 +434,10 @@ exports.matchingUserList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, name, MMR, gender "+
+      "SELECT UDID, ID, name, MMR, gender, is_team_A "+
       "from `user` "+
       "natural join soccer_record "+
-      "where UDID in (SELECT UDID from open_matches where reserv_ID = ?)",
+      "natural join (SELECT UDID, is_team_A from open_match_participant where match_ID = ?) as b",
     [data.schedule_ID],
     function(err, results){
       if(err)
@@ -448,6 +448,42 @@ exports.matchingUserList = function (request, response)
     });
   });
 
+}
+
+exports.matchResult = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    data = result_preprocess(data);
+    connection.query(
+      "SELECT gym_ID, fac_ID, subj_ID FROM fac_schedule WHERE schedule_ID = ?",
+      [data.schedule_ID],
+      function(err, result){
+        if(err)
+          console.log(err);
+        else{
+          connection.query(
+            "INSERT INTO match_result (match_ID, win_team_ID, lose_team_ID, gym_ID, fac_ID, subj_ID, score, mvp_UDID) "+
+            "",
+          [data.schedule_ID],
+          function(err, results){
+            if(err)
+              console.log(err);
+            else{
+              response.send(results);
+            }
+          });
+        }
+      }
+    );
+  });
 }
 
 function suffle_team(result)
@@ -467,4 +503,17 @@ function suffle_team(result)
   }
 
   return result;
+}
+
+function result_preprocess(data)
+{
+    if(data.reserv_score > data.opponent_score){
+      data.win_team_ID = reserv_team_ID;
+      data.lose_team_ID = opponent_team_ID;
+    }else{
+      data.win_team_ID = opponent_team_ID;
+      data.lose_team_ID = reserv_team_ID;
+    }
+
+    return data;
 }
