@@ -234,6 +234,7 @@ function get_month_record(connection, data){
                                 result.month_4 = results.month_4;
                               }
                             });    
+                            console.log(result);
                             return result;
                         }
                       });
