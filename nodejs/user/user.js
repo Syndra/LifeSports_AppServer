@@ -156,7 +156,8 @@ function get_month_record(connection, data){
     "( "+
     "select match_ID as schedule_ID "+
     "from match_participant "+
-    "where UDID = ?",
+    "where UDID = ?"+
+    ")",
     [data.UDID], function(err, results){
       if(err)
         console.log(err);
