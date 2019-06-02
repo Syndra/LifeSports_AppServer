@@ -372,7 +372,7 @@ exports.joinMatching = function (request, response)
               connection.query(
                 "update fac_schedule natural join (select schedule_ID, count(UDID) as cur from fac_schedule as a join open_match_participant as b on (a.schedule_ID = b.match_ID) group by schedule_ID ) as b "+
                 "set fac_schedule.cur_participant = cur",
-                '',
+                '', 
                 function(err, results){
                   if(err)
                     console.log(err)

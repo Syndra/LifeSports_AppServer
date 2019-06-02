@@ -167,7 +167,13 @@ exports.teamInfo = function (request, response)
                                               if(err)
                                                 console.log(err);
                                               else{
-                                                result[0].my_rank = results[0].my_rank;
+                                                try{
+                                                  result[0].my_rank = results[0].my_rank;  
+                                                }
+                                                catch{
+                                                  result[0].my_rank = null;
+                                                }
+                                                
                                                 connection.query(
                                                   "select count(*) as total_match "+
                                                   "from match_result "+
