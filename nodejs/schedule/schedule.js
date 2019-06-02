@@ -163,7 +163,7 @@ exports.reservationDetail = function (request, response)
       "join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
       "where schedule_ID = ? "+
       ")",
-    [data.schedule_ID],
+    [data.schedule_ID, data.schedule_ID],
     function(err, results){
       if(err)
         console.log(err);
