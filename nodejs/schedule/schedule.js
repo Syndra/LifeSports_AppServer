@@ -481,6 +481,13 @@ exports.matchResult = function (request, response)
               console.log(err);
             else{
               response.send(results);
+              connection.query(
+                "UPDATE open_match_participant SET is_evaluate = '1' WHERE match_ID = ? AND UDID = ?",
+              [data.schedule_ID, data.UDID],
+              function(err, results){
+                if(err)
+                  console.log(err);
+              });
             }
           });
         }
