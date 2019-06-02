@@ -75,7 +75,7 @@ exports.getUserInfo = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     var month_record = get_month_record(connection, data);
-    console.log("hello", month_record);
+    console.log("hello", month_record.month_0);
     connection.query(
       'SELECT ID, name, gender, birth, profile_fig FROM `user` WHERE UDID = ?',
     [data.UDID],
