@@ -74,7 +74,7 @@ exports.getUserInfo = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    console.log(get_month_record(connection, data));
+    console.log("hello", get_month_record(connection, data));
     connection.query(
       'SELECT ID, name, gender, birth, profile_fig FROM `user` WHERE UDID = ?',
     [data.UDID],
@@ -147,23 +147,109 @@ function get_month_record(connection, data){
   var result = new Object();
 
   connection.query(
-    "select count(*) as month_0 "+
-    "from fac_schedule "+
-    "where "+
-    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
-    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
-    "AND schedule_ID in "+
-    "( "+
-    "select match_ID as schedule_ID "+
-    "from match_participant "+
-    "where UDID = ?"+
+    "select count(*) as month_0 " +
+    "from fac_schedule " +
+    "where " +
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
+    "AND schedule_ID in " +
+    "( " +
+    "select match_ID as schedule_ID " +
+    "from match_participant " +
+    "where UDID = ?" +
     ")",
-    [data.UDID], function(err, results){
-      if(err)
+    [data.UDID], function (err, results) {
+      if (err)
         console.log(err);
-      else{
+      else {
         console.log("result : ", results[0].month_0);
-        result.month_0 = results.month_0;}});
+        result.month_0 = results.month_0;
+      }
+    });
+
+  connection.query(
+    "select count(*) as month_1 " +
+    "from fac_schedule " +
+    "where " +
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
+    "AND schedule_ID in " +
+    "( " +
+    "select match_ID as schedule_ID " +
+    "from match_participant " +
+    "where UDID = ?" +
+    ")",
+    [data.UDID], function (err, results) {
+      if (err)
+        console.log(err);
+      else {
+        console.log("result : ", results[0].month_1);
+        result.month_1 = results.month_1;
+      }
+    });
+
+  connection.query(
+    "select count(*) as month_2 " +
+    "from fac_schedule " +
+    "where " +
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
+    "AND schedule_ID in " +
+    "( " +
+    "select match_ID as schedule_ID " +
+    "from match_participant " +
+    "where UDID = ?" +
+    ")",
+    [data.UDID], function (err, results) {
+      if (err)
+        console.log(err);
+      else {
+        console.log("result : ", results[0].month_2);
+        result.month_2 = results.month_2;
+      }
+    });
+
+  connection.query(
+    "select count(*) as month_3 " +
+    "from fac_schedule " +
+    "where " +
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
+    "AND schedule_ID in " +
+    "( " +
+    "select match_ID as schedule_ID " +
+    "from match_participant " +
+    "where UDID = ?" +
+    ")",
+    [data.UDID], function (err, results) {
+      if (err)
+        console.log(err);
+      else {
+        console.log("result : ", results[0].month_3);
+        result.month_3 = results.month_3;
+      }
+    });
+
+  connection.query(
+    "select count(*) as month_4 " +
+    "from fac_schedule " +
+    "where " +
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
+    "AND schedule_ID in " +
+    "( " +
+    "select match_ID as schedule_ID " +
+    "from match_participant " +
+    "where UDID = ?" +
+    ")",
+    [data.UDID], function (err, results) {
+      if (err)
+        console.log(err);
+      else {
+        console.log("result : ", results[0].month_4);
+        result.month_4 = results.month_4;
+      }
+    });
 
     return result;
 }
