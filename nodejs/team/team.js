@@ -42,7 +42,192 @@ exports.teamInfo = function (request, response)
             console.log(err);
           else{
             result[0].isleader = results[0].isleader;
-            response.send(result);
+            connection.query(
+              "select count(*) as month_0 "+
+              "from fac_schedule "+
+              "where "+
+              "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
+              "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
+              "AND schedule_ID in "+
+              "( "+
+              "select match_ID as schedule_ID "+
+              "from match_result "+
+              "where win_team_ID = ? or lose_team_ID = ?"+
+              ")",
+            [data.team_ID, data.team_ID],
+            function(err, results){
+              if(err)
+                console.log(err);
+              else{
+                result[0].month_0 = results[0].month_0;
+                connection.query(
+                  "select count(*) as month_1 "+
+                  "from fac_schedule "+
+                  "where "+
+                  "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -1 month)) "+
+                  "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -1 month)) "+
+                  "AND schedule_ID in "+
+                  "( "+
+                  "select match_ID as schedule_ID "+
+                  "from match_result "+
+                  "where win_team_ID = ? or lose_team_ID = ?"+
+                  ")",
+                [data.team_ID, data.team_ID],
+                function(err, results){
+                  if(err)
+                    console.log(err);
+                  else{
+                    result[0].month_1 = results[0].month_1;
+                    connection.query(
+                      "select count(*) as month_2 "+
+                      "from fac_schedule "+
+                      "where "+
+                      "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -2 month)) "+
+                      "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -2 month)) "+
+                      "AND schedule_ID in "+
+                      "( "+
+                      "select match_ID as schedule_ID "+
+                      "from match_result "+
+                      "where win_team_ID = ? or lose_team_ID = ?"+
+                      ")",
+                    [data.team_ID, data.team_ID],
+                    function(err, results){
+                      if(err)
+                        console.log(err);
+                      else{
+                        result[0].month_2 = results[0].month_2;
+                        connection.query(
+                          "select count(*) as month_3 "+
+                          "from fac_schedule "+
+                          "where "+
+                          "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -3 month)) "+
+                          "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -3 month)) "+
+                          "AND schedule_ID in "+
+                          "( "+
+                          "select match_ID as schedule_ID "+
+                          "from match_result "+
+                          "where win_team_ID = ? or lose_team_ID = ?"+
+                          ")",
+                        [data.team_ID, data.team_ID],
+                        function(err, results){
+                          if(err)
+                            console.log(err);
+                          else{
+                            result[0].month_3 = results[0].month_3;
+                            connection.query(
+                              "select count(*) as month_4 "+
+                              "from fac_schedule "+
+                              "where "+
+                              "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -4 month)) "+
+                              "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -4 month)) "+
+                              "AND schedule_ID in "+
+                              "( "+
+                              "select match_ID as schedule_ID "+
+                              "from match_result "+
+                              "where win_team_ID = ? or lose_team_ID = ?"+
+                              ")",
+                            [data.team_ID, data.team_ID],
+                            function(err, results){
+                              if(err)
+                                console.log(err);
+                              else{
+                                result[0].month_4 = results[0].month_4;
+                                connection.query( 
+                                  "set @rownum = 0",
+                                '',
+                                function(err, results){
+                                  if(err)
+                                    console.log(err);
+                                  else{
+                                    connection.query(
+                                      "select UDID, profile_fig, name, MMR, "+
+                                      "@rownum := @rownum + 1 as `rank` from `user` "+
+                                      "natural join soccer_record where UDID in ( "+
+                                      "select UDID from team_user_list where team_ID = ?) order by MMR desc",
+                                    [data.team_ID],
+                                    function(err, results){
+                                      if(err)
+                                        console.log(err);
+                                      else{
+                                        result[0].user_rank_list = results;
+                                        connection.query(
+                                          "set @rownum = 0",
+                                        '',
+                                        function(err, results){
+                                          if(err)
+                                            console.log(err);
+                                          else{
+                                            connection.query(
+                                              "select `rank` as my_rank from( "+
+                                              "select UDID, profile_fig, name, MMR, @rownum := @rownum + 1 as `rank` from `user` natural join soccer_record where UDID in ( "+
+                                              "select UDID from team_user_list where team_ID = ?) order by MMR desc) as b "+
+                                              "where UDID = ?",
+                                              [data.team_ID, data.UDID],
+                                            function(err, results){
+                                              if(err)
+                                                console.log(err);
+                                              else{
+                                                result[0].my_rank = results[0].my_rank;
+                                                connection.query(
+                                                  "select count(*) as total_match "+
+                                                  "from match_result "+
+                                                  "where win_team_ID = ? or lose_team_ID = ?",
+                                                [data.team_ID, data.team_ID],
+                                                function(err, results){
+                                                  if(err)
+                                                    console.log(err);
+                                                  else{
+                                                    result[0].total_match = results[0].total_match;
+                                                    connection.query(
+                                                      "select (sum(is_win) / count(*)) as recent_winning_rate "+
+                                                      "from "+
+                                                      "( "+
+                                                      "select if(win_team_ID = ?, '1', '0') as is_win "+
+                                                      "from match_result join fac_schedule on (match_ID = schedule_ID) "+
+                                                      "where win_team_ID = ? or lose_team_ID = ? "+
+                                                      "order by starttime "+
+                                                      "limit 10 "+
+                                                      ") as b",
+                                                    [data.team_ID, data.team_ID, data.team_ID],
+                                                    function(err, results){
+                                                      if(err)
+                                                        console.log(err);
+                                                      else{
+                                                        result[0].recent_winning_rate = results[0].recent_winning_rate;
+                                                        connection.query(
+                                                          "select count(*) as team_member_num from team_user_list "+
+                                                          "where team_ID = ?",
+                                                        [data.team_ID],
+                                                        function(err, results){
+                                                          if(err)
+                                                            console.log(err);
+                                                          else{
+                                                            result[0].team_member_num = results[0].team_member_num;
+                                                            response.send(result);
+                                                          }
+                                                        });
+                                                      }
+                                                    });
+                                                  }
+                                                });
+                                              }
+                                            });
+                                          }
+                                        });
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
           }
         });
       }
