@@ -334,24 +334,45 @@ exports.joinMatching = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "INSERT into open_matches (reserv_ID, subj_ID, UDID) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), ?)",
-    [data.schedule_ID, data.schedule_ID, data.UDID],
+      // "INSERT into open_matches (reserv_ID, subj_ID, UDID) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), ?)",
+      "SELECT '0' as dodo",
+    // [data.schedule_ID, data.schedule_ID, data.UDID],
+    '',
     function(err, results){
       if(err)
         console.log(err);
       else{
         response.send(results);
         //do some things.
+        //update this 
+        /**
+         * update fac_schedule natural join (select schedule_ID, count(UDID) as cur from fac_schedule as a join open_match_participant as b on (a.schedule_ID = b.match_ID) group by schedule_ID ) as b
+         * set fac_schedule.cur_participant = cur
+         * 
+         * "INSERT into open_match_participant (match_ID, UDID, is_team_A) values (?, ?, '1')"
+         */
         connection.query(
           "SELECT UDID, MMR, is_A_team"+
-          "FROM open_match_team natural join soccer_record"+
-          "WHERE reserv_ID = ?",
+          "FROM open_match_participant natural join soccer_record"+
+          "WHERE match_ID = ?",
         [data.schedule_ID],
         function(err, results){
           if(err)
             console.log(err);
           else{
             suffle_team(results);
+            console.log(results);
+            for(var i = 0; i < results.size(); i++){
+              connection.query(
+                "UPDATE open_match_team SET is_team_A = "+
+                "?"+
+                "WHERE match_ID = ? AND UDID = ?",
+                 [results[i].is_team_A, data.schedule_ID, results[i].UDID], 
+              function(err, results_){
+                if(err)
+                  console.log(err);
+              });
+            }
           }
         });
       }
@@ -391,7 +412,19 @@ exports.matchingUserList = function (request, response)
 
 function suffle_team(result)
 {
-  for(var i = 0; i < result.size(); i++){
-    console.log(result[i]);
+  for(var i = 0; i < result.size() - 1; i++){
+      for(var j = 0; j < result.size() - 1; j++){
+        if(result[j].MMR > result[j+1].MMR){
+          temp = result[j];
+          result[j] = result[j+1];
+          result[j+1] = temp;
+        }
+      }
   }
+
+  for(var i = 0 ; i < result.size(); i++){
+    result[i].is_team_A = i%2;
+  }
+
+  return result;
 }
