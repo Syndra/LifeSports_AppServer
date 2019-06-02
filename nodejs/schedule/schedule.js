@@ -126,7 +126,43 @@ exports.reservationDetail = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, min_participant, max_participant, cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info, subj_ID from fac_schedule natural join gym NATURAL join fac_info where schedule_ID = ?',
+      "(select gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, "+ 
+      "schedule_detail, schedule_type, avail_starttime, avail_endtime,  "+
+      "starttime, endtime, min_participant, max_participant,  "+
+      "cur_participant, gym_location, gym_latitude, gym_longitude, gym_info, subj_info, subj_ID, "+
+      "'0' as cur_status,  "+
+      "NULL as reserv_team_ID, "+
+      "NULL as reserv_team_name,  "+
+      "NULL as reserv_team_MMR,  "+
+      "NULL as reserv_winning_rate,  "+
+      "NULL as opponent_team_ID,  "+
+      "NULL as opponent_team_name,  "+
+      "NULL as opponent_team_MMR,  "+
+      "NULL as opponent_winning_rate,  "+
+      "NULL as is_solo  "+
+      "from fac_schedule as temp natural join gym natural join fac_info where schedule_ID not in (select reserv_ID from reserv_matches) "+
+      "and schedule_ID = ? "+
+      ") "+
+      "union  "+
+      "(select d.gym_ID, d.fac_ID, schedule_ID, gym_name, fac_name, schedule_name, "+
+      "schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime,  "+
+      "min_participant, max_participant, cur_participant, gym_location, gym_latitude,  "+
+      "gym_longitude, gym_info, subj_info, c.subj_ID, "+
+      "'1' as cur_status,  "+
+      "reserv_team_ID,  "+
+      "reserv_team_name,  "+
+      "reserv_team_MMR,  "+
+      "reserv_winning_rate,  "+
+      "opponent_team_ID,  "+
+      "opponent_team_name,  "+
+      "opponent_team_MMR,  "+
+      "opponent_winning_rate, "+
+      "is_solo  "+
+      "from reserv_matches_team c  "+
+      "natural join gym natural join fac_info "+
+      "join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
+      "where schedule_ID = ? "+
+      ")",
     [data.schedule_ID],
     function(err, results){
       if(err)
