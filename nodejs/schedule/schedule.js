@@ -474,7 +474,7 @@ exports.matchResult = function (request, response)
           data.subj_ID = result[0].subj_ID;
           connection.query(
             "INSERT INTO match_result (match_ID, win_team_ID, lose_team_ID, gym_ID, fac_ID, subj_ID, score, mvp_UDID) "+
-            "(?, ?, ?, ?, ?, ?, ?, ?)",
+            "values (?, ?, ?, ?, ?, ?, ?, ?)",
           [data.schedule_ID, data.win_team_ID, data.lose_team_ID, data.gym_ID, data.fac_ID, data.subj_ID, data.score, data.mvp_UDID],
           function(err, results){
             if(err)
