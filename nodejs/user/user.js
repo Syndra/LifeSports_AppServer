@@ -74,8 +74,6 @@ exports.getUserInfo = function (request, response)
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
-    var month_record = get_month_record(connection, data);
-    console.log("hello", month_record.month_0);
     connection.query(
       'SELECT ID, name, gender, birth, profile_fig FROM `user` WHERE UDID = ?',
     [data.UDID],
@@ -83,6 +81,8 @@ exports.getUserInfo = function (request, response)
       if(err)
         console.log(err);
       else{
+        var month_record = get_month_record(connection, data);
+        console.log("hello", month_record);
         response.send(results);
       }
     });
