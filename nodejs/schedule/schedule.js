@@ -320,7 +320,29 @@ exports.joinReservation = function (request, response)
   });
 
 }
-
+/**
+ *
+  connection.query(
+          "",
+          [],
+          function(err, results){
+            if(err)
+              console.log(err)
+            else{
+              
+            }
+          }
+        );
+ * 
+ */
+//do some things.
+        //update this 
+        /**
+         * update fac_schedule natural join (select schedule_ID, count(UDID) as cur from fac_schedule as a join open_match_participant as b on (a.schedule_ID = b.match_ID) group by schedule_ID ) as b
+         * set fac_schedule.cur_participant = cur
+         * 
+         * "INSERT into open_match_participant (match_ID, UDID, is_team_A) values (?, ?, '1')"
+         */
 //매칭 - 참여하기
 exports.joinMatching = function (request, response)
 {
@@ -334,47 +356,59 @@ exports.joinMatching = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      // "INSERT into open_matches (reserv_ID, subj_ID, UDID) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), ?)",
-      "SELECT '0' as dodo",
-    // [data.schedule_ID, data.schedule_ID, data.UDID],
-    '',
+      "INSERT into open_matches (reserv_ID, subj_ID, UDID) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), ?)",
+      [data.schedule_ID, data.schedule_ID, data.UDID],
     function(err, results){
       if(err)
         console.log(err);
       else{
         response.send(results);
-        //do some things.
-        //update this 
-        /**
-         * update fac_schedule natural join (select schedule_ID, count(UDID) as cur from fac_schedule as a join open_match_participant as b on (a.schedule_ID = b.match_ID) group by schedule_ID ) as b
-         * set fac_schedule.cur_participant = cur
-         * 
-         * "INSERT into open_match_participant (match_ID, UDID, is_team_A) values (?, ?, '1')"
-         */
         connection.query(
-          "SELECT UDID, MMR, is_team_A "+
-          "FROM open_match_participant natural join soccer_record "+
-          "WHERE match_ID = ?",
-        [data.schedule_ID],
-        function(err, results){
-          if(err)
-            console.log(err);
-          else{
-            suffle_team(results);
-            console.log(results);
-            for(var i = 0; i < results.length; i++){
+          "INSERT INTO open_match_participant (match_ID, UDID, is_team_A) VALUES (?, ?, '1')",
+          [data.schedule_ID, data.UDID],
+          function(err, results){
+            if(err)
+              console.log(err)
+            else{
               connection.query(
-                "UPDATE open_match_participant SET is_team_A = "+
-                "? "+
-                "WHERE match_ID = ? AND UDID = ?",
-                 [results[i].is_team_A, data.schedule_ID, results[i].UDID], 
-              function(err, results_){
-                if(err)
-                  console.log(err);
-              });
+                "update fac_schedule natural join (select schedule_ID, count(UDID) as cur from fac_schedule as a join open_match_participant as b on (a.schedule_ID = b.match_ID) group by schedule_ID ) as b "+
+                "set fac_schedule.cur_participant = cur",
+                '',
+                function(err, results){
+                  if(err)
+                    console.log(err)
+                  else{
+                    connection.query(
+                      "SELECT UDID, MMR, is_team_A "+
+                      "FROM open_match_participant natural join soccer_record "+
+                      "WHERE match_ID = ?",
+                    [data.schedule_ID],
+                    function(err, results){
+                      if(err)
+                        console.log(err);
+                      else{
+                        suffle_team(results);
+                        console.log(results);
+                        for(var i = 0; i < results.length; i++){
+                          connection.query(
+                            "UPDATE open_match_participant SET is_team_A = "+
+                            "? "+
+                            "WHERE match_ID = ? AND UDID = ?",
+                             [results[i].is_team_A, data.schedule_ID, results[i].UDID], 
+                          function(err, results_){
+                            if(err)
+                              console.log(err);
+                          });
+                        }
+                      }
+                    });
+                  }
+                }
+              );
+              
             }
           }
-        });
+        );
       }
     });
   });
