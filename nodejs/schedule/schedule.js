@@ -502,11 +502,25 @@ exports.toEvaluateList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, name, MMR, gender, is_team_A "+
-      "from `user` "+
-      "natural join soccer_record "+
-      "natural join (SELECT UDID, is_team_A from open_match_participant where match_ID = ?) as b",
-    [data.schedule_ID],
+      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday "+
+      "from schedule_detail a join  "+
+      "( "+
+      "SELECT reserv_ID FROM reserv_matches "+
+      "WHERE reserv_team_ID in  "+
+      "( "+
+      "SELECT team_ID FROM team WHERE team_leader_UDID = ? "+
+      ") "+
+      ") b on (a.schedule_ID = b.reserv_ID) "+
+      "where schedule_ID not in  "+
+      "(SELECT match_ID from match_result) "+
+      "AND endtime < sysdate() "+
+      ") "+
+      "UNION "+
+      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday  "+
+      "from schedule_detail a join (SELECT DISTINCT match_ID FROM open_match_participant WHERE UDID = ?) b on (a.schedule_ID = b.match_ID) "+
+      "WHERE (TO_DAYS(sysdate()) - TO_DAYS(starttime)) < 7 AND endtime < sysdate() "+
+      ")",
+    [data.UDID, data.UDID],
     function(err, results){
       if(err)
         console.log(err);
