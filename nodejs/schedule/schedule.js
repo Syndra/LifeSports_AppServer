@@ -517,7 +517,7 @@ exports.toEvaluateList = function (request, response)
       ") "+
       "UNION "+
       "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday  "+
-      "from schedule_detail a join (SELECT DISTINCT match_ID FROM open_match_participant WHERE UDID = ?) b on (a.schedule_ID = b.match_ID) "+
+      "from schedule_detail a join (SELECT DISTINCT match_ID FROM open_match_participant WHERE UDID = ?  AND is_evaluate = '0') b on (a.schedule_ID = b.match_ID) "+
       "WHERE (TO_DAYS(sysdate()) - TO_DAYS(starttime)) < 7 AND endtime < sysdate() "+
       ")",
     [data.UDID, data.UDID],
