@@ -144,25 +144,24 @@ exports.reservationDetail = function (request, response)
       "and schedule_ID = ? "+
       ") "+
       "union  "+
-      "(select d.gym_ID, d.fac_ID, schedule_ID, gym_name, fac_name, schedule_name, "+
-      "schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime,  "+
-      "min_participant, max_participant, cur_participant, gym_location, gym_latitude,  "+
+      "(select gym_ID, fac_ID, schedule_ID, gym_name, fac_name, schedule_name, "+
+      "schedule_detail, schedule_type, avail_starttime, avail_endtime, starttime, endtime, "+
+      "min_participant, max_participant, cur_participant, gym_location, gym_latitude, "+
       "gym_longitude, gym_info, subj_info, c.subj_ID, "+
-      "'1' as cur_status,  "+
-      "reserv_team_ID,  "+
-      "reserv_team_name,  "+
-      "reserv_team_MMR,  "+
-      "reserv_winning_rate,  "+
-      "opponent_team_ID,  "+
-      "opponent_team_name,  "+
-      "opponent_team_MMR,  "+
-      "opponent_winning_rate, "+
-      "is_solo  "+
-      "from reserv_matches_team c  "+
-      "natural join gym natural join fac_info "+
-      "join fac_schedule d on (c.reserv_ID = d.schedule_ID) "+
-      "where schedule_ID = ? "+
-      ")",
+      "'1' as cur_status, "+
+        "reserv_team_ID, "+
+        "reserv_team_name, "+
+        "reserv_team_MMR, "+
+        "reserv_winning_rate, "+
+        "opponent_team_ID, "+
+        "opponent_team_name, "+
+        "opponent_team_MMR, "+
+        "opponent_winning_rate, "+
+        "is_solo "+
+        "from  fac_schedule natural join gym natural join fac_info "+
+        "join reserv_matches_team c on (c.reserv_ID = schedule_ID) "+
+        "where schedule_ID = ? "+
+        ")",
     [data.schedule_ID, data.schedule_ID],
     function(err, results){
       if(err)
