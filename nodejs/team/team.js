@@ -282,12 +282,12 @@ exports.teamResultSearch = function (request, response)
           }
 
           if(results[i].win_team_ID != data.team_ID){
-            results[i].oppositeTeam = results[i].win_team_ID;
+            results[i].oppositeTeam = results[i].win_team_name;
             results[i].oppositeTeamScore = results[i].win_score;
             results[i].myTeamScore = results[i].lose_score;
           }
           else{
-            results[i].oppositeTeam = results[i].lose_team_ID;
+            results[i].oppositeTeam = results[i].lose_team_name;
             results[i].oppositeTeamScore = results[i].lose_score;
             results[i].myTeamScore = results[i].win_score;
           }     
