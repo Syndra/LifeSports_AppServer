@@ -162,7 +162,7 @@ function get_month_record(connection, data){
       if(err)
         console.log(err);
       else{
-        console.log(results);
+        console.log(JSON.parse(results));
         result.month_0 = results.month_0;}});
 
     return result;
