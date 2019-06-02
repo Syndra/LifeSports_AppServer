@@ -62,30 +62,123 @@ exports.loginTry = function (request, response)
 }
 
 //get User Information
-exports.getUserInfo = function (request, response)
-{
+exports.getUserInfo = function (request, response) {
   var body = '';
   const chunks = [];
   var _data;
 
   request.on('data', chunk => chunks.push(chunk));
-  request.on('end', () =>
-  {
+  request.on('end', () => {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
       'SELECT ID, name, gender, birth, profile_fig FROM `user` WHERE UDID = ?',
-    [data.UDID],
-    function(err, results){
-      if(err)
-        console.log(err);
-      else{
-        var month_record = get_month_record(connection, data);
-        console.log("hello", month_record);
-        response.send(results);
-      }
-    });
+      [data.UDID],
+      function (err, result) {
+        if (err)
+          console.log(err);
+        else {
+          connection.query(
+            "select count(*) as month_0 " +
+            "from fac_schedule " +
+            "where " +
+            "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
+            "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
+            "AND schedule_ID in " +
+            "( " +
+            "select match_ID as schedule_ID " +
+            "from match_participant " +
+            "where UDID = ?" +
+            ")",
+            [data.UDID], function (err, results) {
+              if (err)
+                console.log(err);
+              else {
+                result.month_0 = results[0].month_0;
+                connection.query(
+                  "select count(*) as month_1 " +
+                  "from fac_schedule " +
+                  "where " +
+                  "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
+                  "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
+                  "AND schedule_ID in " +
+                  "( " +
+                  "select match_ID as schedule_ID " +
+                  "from match_participant " +
+                  "where UDID = ?" +
+                  ")",
+                  [data.UDID], function (err, results) {
+                    if (err)
+                      console.log(err);
+                    else {
+                      result.month_1 = results[0].month_1;
+                      connection.query(
+                        "select count(*) as month_2 " +
+                        "from fac_schedule " +
+                        "where " +
+                        "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
+                        "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
+                        "AND schedule_ID in " +
+                        "( " +
+                        "select match_ID as schedule_ID " +
+                        "from match_participant " +
+                        "where UDID = ?" +
+                        ")",
+                        [data.UDID], function (err, results) {
+                          if (err)
+                            console.log(err);
+                          else {
+                            result.month_2 = results[0].month_2;
+                            connection.query(
+                              "select count(*) as month_3 " +
+                              "from fac_schedule " +
+                              "where " +
+                              "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
+                              "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
+                              "AND schedule_ID in " +
+                              "( " +
+                              "select match_ID as schedule_ID " +
+                              "from match_participant " +
+                              "where UDID = ?" +
+                              ")",
+                              [data.UDID], function (err, results) {
+                                if (err)
+                                  console.log(err);
+                                else {
+                                  result.month_3 = results[0].month_3;
+                                  connection.query(
+                                    "select count(*) as month_4 " +
+                                    "from fac_schedule " +
+                                    "where " +
+                                    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
+                                    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
+                                    "AND schedule_ID in " +
+                                    "( " +
+                                    "select match_ID as schedule_ID " +
+                                    "from match_participant " +
+                                    "where UDID = ?" +
+                                    ")",
+                                    [data.UDID], function (err, results) {
+                                      if (err)
+                                        console.log(err);
+                                      else {
+                                        result.month_4 = results[0].month_4;
+                                        console.log(result);
+                                        response.send(result);
+                                      }
+                                    });
+                                }
+                              });
+                          }
+                        });
+                    }
+                  });
+              }
+            });
+
+        }
+      });
   });
 
 }
@@ -145,103 +238,5 @@ exports.searchUserTeam = function (request, response)
 
 function get_month_record(connection, data){
 
-  var result = new Object();
-
-  connection.query(
-    "select count(*) as month_0 " +
-    "from fac_schedule " +
-    "where " +
-    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
-    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) " +
-    "AND schedule_ID in " +
-    "( " +
-    "select match_ID as schedule_ID " +
-    "from match_participant " +
-    "where UDID = ?" +
-    ")",
-    [data.UDID], function (err, results) {
-      if (err)
-        console.log(err);
-      else {
-        result.month_0 = results[0].month_0;
-        connection.query(
-          "select count(*) as month_1 " +
-          "from fac_schedule " +
-          "where " +
-          "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
-          "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -1 month)) " +
-          "AND schedule_ID in " +
-          "( " +
-          "select match_ID as schedule_ID " +
-          "from match_participant " +
-          "where UDID = ?" +
-          ")",
-          [data.UDID], function (err, results) {
-            if (err)
-              console.log(err);
-            else {
-              result.month_1 = results[0].month_1;
-              connection.query(
-                "select count(*) as month_2 " +
-                "from fac_schedule " +
-                "where " +
-                "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
-                "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -2 month)) " +
-                "AND schedule_ID in " +
-                "( " +
-                "select match_ID as schedule_ID " +
-                "from match_participant " +
-                "where UDID = ?" +
-                ")",
-                [data.UDID], function (err, results) {
-                  if (err)
-                    console.log(err);
-                  else {
-                    result.month_2 = results[0].month_2;
-                    connection.query(
-                      "select count(*) as month_3 " +
-                      "from fac_schedule " +
-                      "where " +
-                      "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
-                      "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -3 month)) " +
-                      "AND schedule_ID in " +
-                      "( " +
-                      "select match_ID as schedule_ID " +
-                      "from match_participant " +
-                      "where UDID = ?" +
-                      ")",
-                      [data.UDID], function (err, results) {
-                        if (err)
-                          console.log(err);
-                        else {
-                          result.month_3 = results[0].month_3;
-                          connection.query(
-                            "select count(*) as month_4 " +
-                            "from fac_schedule " +
-                            "where " +
-                            "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
-                            "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -4 month)) " +
-                            "AND schedule_ID in " +
-                            "( " +
-                            "select match_ID as schedule_ID " +
-                            "from match_participant " +
-                            "where UDID = ?" +
-                            ")",
-                            [data.UDID], function (err, results) {
-                              if (err)
-                                console.log(err);
-                              else {
-                                result.month_4 = results[0].month_4;
-                                console.log(result);
-                                return result;
-                              }
-                            });    
-                        }
-                      });
-                  }
-                });
-            }
-          });
-      }
-    });
+  
 }
