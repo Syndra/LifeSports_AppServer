@@ -95,7 +95,7 @@ exports.getUserInfo = function (request, response) {
               if (err)
                 console.log(err);
               else {
-                result.month_0 = results[0].month_0;
+                result[0].month_0 = results[0].month_0;
                 connection.query(
                   "select count(*) as month_1 " +
                   "from fac_schedule " +
@@ -112,7 +112,7 @@ exports.getUserInfo = function (request, response) {
                     if (err)
                       console.log(err);
                     else {
-                      result.month_1 = results[0].month_1;
+                      result[0].month_1 = results[0].month_1;
                       connection.query(
                         "select count(*) as month_2 " +
                         "from fac_schedule " +
@@ -129,7 +129,7 @@ exports.getUserInfo = function (request, response) {
                           if (err)
                             console.log(err);
                           else {
-                            result.month_2 = results[0].month_2;
+                            result[0].month_2 = results[0].month_2;
                             connection.query(
                               "select count(*) as month_3 " +
                               "from fac_schedule " +
@@ -146,7 +146,7 @@ exports.getUserInfo = function (request, response) {
                                 if (err)
                                   console.log(err);
                                 else {
-                                  result.month_3 = results[0].month_3;
+                                  result[0].month_3 = results[0].month_3;
                                   connection.query(
                                     "select count(*) as month_4 " +
                                     "from fac_schedule " +
@@ -163,7 +163,7 @@ exports.getUserInfo = function (request, response) {
                                       if (err)
                                         console.log(err);
                                       else {
-                                        result.month_4 = results[0].month_4;
+                                        result[0].month_4 = results[0].month_4;
                                         console.log(result);
                                         response.send(result);
                                       }
