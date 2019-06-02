@@ -44,13 +44,25 @@ exports.loginTry = function (request, response) {
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'SELECT UDID, ID, name, gender, birth FROM `user` WHERE ID=? AND PWD=?',
+      'SELECT UDID, ID, name, gender, MMR FROM `user` natural join soccer_record WHERE ID=? AND PWD=?',
       [data.ID, data.PWD],
-      function (err, results) {
+      function (err, result) {
         if (err)
           console.log(err);
         else {
-          response.send(results);
+          connection.query(
+            "SELECT if(count(*) = '0', '0', '1') as hasTeam "+
+            "FROM team "+
+            "WHERE team_leader_UDID = ?",
+            [result[0].UDID],
+            function (err, results) {
+              if (err)
+                console.log(err);
+              else {
+                result[0].isLeader = results[0].hasTeam;
+                response.send(result);
+              }
+            });
         }
       });
   });
