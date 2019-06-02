@@ -20,13 +20,22 @@ exports.regiUser = function (request, response) {
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      'INSERT INTO `user` (ID, PWD, name, gender, ) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO `user` (ID, PWD, name, gender, birth) VALUES (?, ?, ?, ?, ?)',
       [data.ID, data.PWD, data.name, data.gender, data.birth],
       function (err, results) {
         if (err)
           console.log(err);
         else {
-          response.send("Success");
+          connection.query(
+            'INSERT INTO `soccer_record` (UDID, main_foot, main_position, subjective_skill, career) VALUES ((select max(UDID) from `user`), ?, ?, ?, ?)',
+            [data.mainFoot, data.mainRole, data.skill, data.career],
+            function (err, results) {
+              if (err)
+                console.log(err);
+              else {
+                response.send("Success");
+              }
+            });
         }
       });
   });
