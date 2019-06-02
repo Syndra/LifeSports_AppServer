@@ -68,6 +68,10 @@ app.post('/schedule/schedulereservupdate', (req, res) => {
   schedule.insertReservation(req, res);
 });
 
+app.post('/schedule/schedulereservjoin', (req, res) => {
+  schedule.joinReservation(req, res);
+});
+
 app.post('/schedule/schedulematchupdate', (req, res) => {
   schedule.joinMatching(req, res);
 });

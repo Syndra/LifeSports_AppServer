@@ -258,7 +258,35 @@ exports.insertReservation = function (request, response)
 
 }
 
-//예약 - 예약하기
+//예약 - 끼어들기
+exports.joinReservation = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      "UPDATE reserv_matches SET opponent_team_ID = "+
+      "(SELECT team_ID from team WHERE team_leader_UDID = ?) "+
+      "WHERE reserv_ID = ?",
+    [data.UDID, data.schedule_ID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}
+
+//매칭 - 참여하기
 exports.joinMatching = function (request, response)
 {
   var body = '';
