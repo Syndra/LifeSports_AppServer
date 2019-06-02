@@ -352,7 +352,7 @@ exports.joinMatching = function (request, response)
          * "INSERT into open_match_participant (match_ID, UDID, is_team_A) values (?, ?, '1')"
          */
         connection.query(
-          "SELECT UDID, MMR, is_A_team "+
+          "SELECT UDID, MMR, is_team_A "+
           "FROM open_match_participant natural join soccer_record "+
           "WHERE match_ID = ?",
         [data.schedule_ID],
