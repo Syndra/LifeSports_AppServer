@@ -394,7 +394,7 @@ exports.recommendedTeam = function (request, response)
     connection.query(
       "SELECT team_ID, team_name, team_fig "+
       "FROM team "+
-      "WHERE team_MMR > (SELECT MMR from soccer_record WHERE UDID = '1') "+
+      "WHERE team_MMR > (SELECT MMR from soccer_record WHERE UDID = ?) "+
       "order by team_MMR "+
       "limit 5",
     [data.UDID],
