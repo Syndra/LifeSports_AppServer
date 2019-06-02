@@ -22,13 +22,29 @@ exports.teamInfo = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT UDID, ID, name, team_ID, team_name, team_main_subj, team_MMR, winning_rate from `user` as a join (SELECT team_ID, team_name, team_leader_UDID, team_main_subj, team_MMR, winning_rate from team where team_ID = ?) as b on (a.UDID = b.team_leader_UDID)",
+      "SELECT UDID, ID, name, team_ID, team_name, team_main_subj, "+
+      "team_MMR, winning_rate, team_fig from `user` as a "+
+      "join (SELECT team_ID, team_name, team_leader_UDID, team_main_subj, "+
+      "team_MMR, winning_rate, team_fig from team where team_ID = ?) as b "+
+      "on (a.UDID = b.team_leader_UDID)",
     [data.team_ID],
-    function(err, results){
+    function(err, result){
       if(err)
         console.log(err);
       else{
-        response.send(results);
+        connection.query(
+          "SELECT if(team_leader_UDID = ?, '1', '0') as isleader "+
+          "FROM team "+
+          "WHERE team_ID = ?",
+        [data.UDID, data.team_ID],
+        function(err, results){
+          if(err)
+            console.log(err);
+          else{
+            result[0].isleader = results[0].isleader;
+            response.send(result);
+          }
+        });
       }
     });
   });
