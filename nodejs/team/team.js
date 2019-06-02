@@ -280,6 +280,19 @@ exports.teamResultSearch = function (request, response)
             results[i].win_score = score_split[1];
             results[i].lose_score = score_split[0];
           }
+
+          if(results[i].win_team_ID != data.team_ID){
+            results[i].oppositeTeam = results[i].win_team_ID;
+            results[i].oppositeTeamScore = results[i].win_score;
+            results[i].myTeamScore = results[i].lose_score;
+          }
+          else{
+            results[i].oppositeTeam = results[i].lose_team_ID;
+            results[i].oppositeTeamScore = results[i].lose_score;
+            results[i].myTeamScore = results[i].win_score;
+          }     
+          results[i].MVP = results[i].mvp_name;
+          results[i].gym = results[i].gym_name;
         }
         response.send(results);
       }
