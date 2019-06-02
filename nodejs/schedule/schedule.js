@@ -364,7 +364,7 @@ exports.joinMatching = function (request, response)
             console.log(results);
             for(var i = 0; i < results.length; i++){
               connection.query(
-                "UPDATE open_match_team SET is_team_A = "+
+                "UPDATE open_match_participant SET is_team_A = "+
                 "? "+
                 "WHERE match_ID = ? AND UDID = ?",
                  [results[i].is_team_A, data.schedule_ID, results[i].UDID], 
