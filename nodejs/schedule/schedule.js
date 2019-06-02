@@ -502,7 +502,7 @@ exports.toEvaluateList = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday "+
+      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, schedule_type, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday "+
       "from schedule_detail a join  "+
       "( "+
       "SELECT reserv_ID FROM reserv_matches "+
@@ -516,7 +516,7 @@ exports.toEvaluateList = function (request, response)
       "AND endtime < sysdate() "+
       ") "+
       "UNION "+
-      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday  "+
+      "(SELECT gym_ID, gym_name, fac_ID, fac_name ,starttime, endtime, schedule_ID, schedule_type, TO_DAYS(sysdate()) - TO_DAYS(starttime) as dday  "+
       "from schedule_detail a join (SELECT DISTINCT match_ID FROM open_match_participant WHERE UDID = ?  AND is_evaluate = '0') b on (a.schedule_ID = b.match_ID) "+
       "WHERE (TO_DAYS(sysdate()) - TO_DAYS(starttime)) < 7 AND endtime < sysdate() "+
       ")",
