@@ -245,8 +245,8 @@ exports.insertReservation = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "INSERT into reserv_matches (reserv_ID, subj_ID, reserv_team_ID) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), (select team_ID from team where team_leader_UDID = ?))",
-    [data.schedule_ID, data.schedule_ID, data.UDID],
+      "INSERT into reserv_matches (reserv_ID, subj_ID, reserv_team_ID, is_solo) values (?, (select subj_ID from fac_schedule where schedule_ID = ?), (select team_ID from team where team_leader_UDID = ?), ?)",
+    [data.schedule_ID, data.schedule_ID, data.UDID, data.is_solo],
     function(err, results){
       if(err)
         console.log(err);
@@ -306,6 +306,19 @@ exports.joinMatching = function (request, response)
         console.log(err);
       else{
         response.send(results);
+        //do some things.
+        connection.query(
+          "SELECT UDID, MMR, is_A_team"+
+          "FROM open_match_team natural join soccer_record"+
+          "WHERE reserv_ID = ?",
+        [data.schedule_ID],
+        function(err, results){
+          if(err)
+            console.log(err);
+          else{
+            suffle_team(results);
+          }
+        });
       }
     });
   });
@@ -339,4 +352,11 @@ exports.matchingUserList = function (request, response)
     });
   });
 
+}
+
+function suffle_team(result)
+{
+  for(var i = 0; i < result.size(); i++){
+    console.log(result[i]);
+  }
 }
