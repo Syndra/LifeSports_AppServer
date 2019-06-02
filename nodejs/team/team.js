@@ -378,3 +378,33 @@ exports.createTeam = function (request, response)
   });
 
 }
+
+//팀 추천
+exports.recommendedTeam = function (request, response)
+{
+  var body = '';
+  const chunks = [];
+  var _data;
+  request.on('data', chunk => chunks.push(chunk));
+  request.on('end', () =>
+  {
+    data = JSON.parse(Buffer.concat(chunks).toString());
+    console.log('Data : ', data);
+    var connection = mysqlLoader.mysql_load();
+    connection.query(
+      "SELECT team_ID, team_name, team_fig "+
+      "FROM team "+
+      "WHERE team_MMR > (SELECT MMR from soccer_record WHERE UDID = '1') "+
+      "order by team_MMR "+
+      "limit 5",
+    [data.UDID],
+    function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        response.send(results);
+      }
+    });
+  });
+
+}

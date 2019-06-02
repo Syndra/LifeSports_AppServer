@@ -151,6 +151,10 @@ app.post('/team/create', (req, res) => {
   team.createTeam(req, res);
 });
 
+app.post('/team/recommended', (req, res) => {
+  team.recommendedTeam(req, res);
+});
+
 
 //OTHER
 app.listen(3000, () => {
