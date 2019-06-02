@@ -255,12 +255,24 @@ exports.teamResultSearch = function (request, response)
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
     connection.query(
-      "SELECT match_ID, win_team_ID, win_team_name, win_team_MMR, win_winning_rate, lose_team_ID, lose_team_name, lose_team_MMR, lose_winning_rate, temp.gym_ID, gym_name, gym_location, mvp_UDID, mvp_ID, mvp_name from (SELECT match_ID, win_team_ID, lose_team_ID, a.gym_ID, a.fac_ID, score, mvp_UDID, starttime, endtime from match_result as a join fac_schedule as b on (match_ID = b.schedule_ID)) as temp join (select team_ID, team_name as win_team_name, team_MMR as win_team_MMR, winning_rate as win_winning_rate from team) as c on (temp.win_team_ID = c.team_ID) join (select team_ID, team_name as lose_team_name, team_MMR as lose_team_MMR, winning_rate as lose_winning_rate from team) as d on (temp.lose_team_ID = d.team_ID) join (select gym_ID, gym_name, gym_location from gym) as e on (temp.gym_ID = e.gym_ID) join (select UDID, ID as mvp_ID, name as mvp_name from `user`) as f on (temp.mvp_UDID = f.UDID) WHERE win_team_ID = ? OR lose_team_ID = ?",
+      "SELECT match_ID, win_team_ID, win_team_name, score, win_team_MMR, win_winning_rate, lose_team_ID, lose_team_name, lose_team_MMR, lose_winning_rate, temp.gym_ID, gym_name, gym_location, mvp_UDID, mvp_ID, mvp_name from (SELECT match_ID, win_team_ID, lose_team_ID, a.gym_ID, a.fac_ID, score, mvp_UDID, starttime, endtime from match_result as a join fac_schedule as b on (match_ID = b.schedule_ID)) as temp join (select team_ID, team_name as win_team_name, team_MMR as win_team_MMR, winning_rate as win_winning_rate from team) as c on (temp.win_team_ID = c.team_ID) join (select team_ID, team_name as lose_team_name, team_MMR as lose_team_MMR, winning_rate as lose_winning_rate from team) as d on (temp.lose_team_ID = d.team_ID) join (select gym_ID, gym_name, gym_location from gym) as e on (temp.gym_ID = e.gym_ID) join (select UDID, ID as mvp_ID, name as mvp_name from `user`) as f on (temp.mvp_UDID = f.UDID) WHERE win_team_ID = ? OR lose_team_ID = ?",
     [data.team_ID],
     function(err, results){
       if(err)
         console.log(err);
       else{
+        for(var i = 0 ; i < results.length; i++){
+          var score = results[i].score;
+          var score_split = score.split(':');
+          if(score_split[0] > score_split[1]){
+            results[i].win_score = score_split[0];
+            results[i].lose_score = score_split[1];
+          }
+          else{
+            results[i].win_score = score_split[1];
+            results[i].lose_score = score_split[0];
+          }
+        }
         response.send(results);
       }
     });
