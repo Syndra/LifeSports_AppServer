@@ -67,14 +67,16 @@ exports.getUserInfo = function (request, response)
   var body = '';
   const chunks = [];
   var _data;
+
   request.on('data', chunk => chunks.push(chunk));
   request.on('end', () =>
   {
     data = JSON.parse(Buffer.concat(chunks).toString());
     console.log('Data : ', data);
     var connection = mysqlLoader.mysql_load();
+    console.log(get_month_record(connection, data));
     connection.query(
-      'SELECT ID, name, gender, birth FROM `user` WHERE UDID = ?',
+      'SELECT ID, name, gender, birth, profile_fig FROM `user` WHERE UDID = ?',
     [data.UDID],
     function(err, results){
       if(err)
@@ -138,4 +140,28 @@ exports.searchUserTeam = function (request, response)
     });
   });
 
+}
+
+function get_month_record(connection, data){
+
+  var result = new Object();
+
+  connection.query(
+    "select count(*) as month_0 "+
+    "from fac_schedule "+
+    "where "+
+    "YEAR(starttime) = YEAR(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
+    "AND MONTH(starttime) = MONTH(DATE_ADD(NOW(),  INTERVAL -0 month)) "+
+    "AND schedule_ID in "+
+    "( "+
+    "select match_ID as schedule_ID "+
+    "from match_participant "+
+    "where UDID = ?",
+    [data.UDID], function(err, results){
+      if(err)
+        console.log(err);
+      else{
+        result.month_0 = results.month_0;}});
+
+    return result;
 }
