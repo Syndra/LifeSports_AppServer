@@ -105,7 +105,7 @@ exports.getUserInfo = function (request, response) {
             "AND schedule_ID in " +
             "( " +
             "select match_ID as schedule_ID " +
-            "from match_participant " +
+            "from open_match_participant " +
             "where UDID = ?" +
             ")",
             [data.UDID], function (err, results) {
@@ -122,7 +122,7 @@ exports.getUserInfo = function (request, response) {
                   "AND schedule_ID in " +
                   "( " +
                   "select match_ID as schedule_ID " +
-                  "from match_participant " +
+                  "from open_match_participant " +
                   "where UDID = ?" +
                   ")",
                   [data.UDID], function (err, results) {
@@ -139,7 +139,7 @@ exports.getUserInfo = function (request, response) {
                         "AND schedule_ID in " +
                         "( " +
                         "select match_ID as schedule_ID " +
-                        "from match_participant " +
+                        "from open_match_participant " +
                         "where UDID = ?" +
                         ")",
                         [data.UDID], function (err, results) {
@@ -156,7 +156,7 @@ exports.getUserInfo = function (request, response) {
                               "AND schedule_ID in " +
                               "( " +
                               "select match_ID as schedule_ID " +
-                              "from match_participant " +
+                              "from open_match_participant " +
                               "where UDID = ?" +
                               ")",
                               [data.UDID], function (err, results) {
@@ -173,7 +173,7 @@ exports.getUserInfo = function (request, response) {
                                     "AND schedule_ID in " +
                                     "( " +
                                     "select match_ID as schedule_ID " +
-                                    "from match_participant " +
+                                    "from open_match_participant " +
                                     "where UDID = ?" +
                                     ")",
                                     [data.UDID], function (err, results) {
@@ -214,7 +214,7 @@ exports.getUserInfo = function (request, response) {
                                                           result[0].under_user = results;
                                                           connection.query(
                                                             "select count(*) as total_match "+
-                                                            "from match_participant "+
+                                                            "from open_match_participant "+
                                                             "where UDID = ?",
                                                             [data.UDID], function (err, results) {
                                                               if (err)

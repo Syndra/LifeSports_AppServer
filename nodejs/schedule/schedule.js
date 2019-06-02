@@ -561,15 +561,15 @@ function suffle_team(result)
 function result_preprocess(data)
 {
     if(data.reserv_score > data.opponent_score){
-      data.win_team_ID = reserv_team_ID;
-      data.lose_team_ID = opponent_team_ID;
-      var winS = reserv_score;
-      var loseS = opponent_score;
+      data.win_team_ID = data.reserv_team_ID;
+      data.lose_team_ID = data.opponent_team_ID;
+      var winS = data.reserv_score;
+      var loseS = data.opponent_score;
     }else{
-      data.win_team_ID = opponent_team_ID;
-      data.lose_team_ID = reserv_team_ID;
-      var winS = opponent_score;
-      var loseS = reserv_score;
+      data.win_team_ID = data.opponent_team_ID;
+      data.lose_team_ID = data.reserv_team_ID;
+      var winS = data.opponent_score;
+      var loseS = data.reserv_score;
     }
     data.score = winS + ":" + loseS;
 
